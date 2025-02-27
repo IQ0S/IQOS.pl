@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logowanie | IQOS Polska</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'IQOS', Arial, sans-serif;
+    }
+
+    body {
+      background-color: #fff;
+      color: #34303D;
+    }
+
+    @font-face {
+      font-family: 'IQOS';
+      src: url('IQOS-Bold.woff2') format('woff2'), url('IQOS-Bold.woff') format('woff');
+      font-weight: bold;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'IQOS';
+      src: url('IQOS-Regular.woff2') format('woff2'), url('IQOS-Regular.woff') format('woff');
+      font-weight: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'IQOS';
+      src: url('IQOS-Light.woff2') format('woff2'), url('IQOS-Light.woff') format('woff');
+      font-weight: 300;
+      font-display: swap;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .logo {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .logo img {
+      width: 120px;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 30px;
+    }
+
+    .auth-container {
+      margin-top: 30px;
+    }
+
+    .auth-option {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .auth-option-radio {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #aaa;
+      margin-right: 15px;
+      position: relative;
+    }
+
+    .auth-option-radio.selected {
+      border-color: #34303D;
+    }
+
+    .auth-option-radio.selected::after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 12px;
+      height: 12px;
+      background-color: #34303D;
+      border-radius: 50%;
+    }
+
+    .auth-form {
+      margin-top: 20px;
+      display: none;
+    }
+
+    .auth-form.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 16px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .form-info {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .password-requirements {
+      margin: 10px 0;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .password-requirement {
+      margin: 5px 0;
+      list-style-type: disc;
+      margin-left: 20px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+
+    .checkbox-input {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+      margin-top: 3px;
+    }
+
+    .checkbox-label {
+      flex: 1;
+      font-size: 16px;
+    }
+
+    .checkbox-label a {
+      color: #34303D;
+      text-decoration: underline;
+    }
+
+    .btn-primary {
+      background-color: #34303D;
+      color: white;
+      padding: 15px;
+      border-radius: 30px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 20px 0;
+      width: 100%;
+      border: none;
+      font-size: 16px;
+    }
+
+    .features-section {
+      margin-top: 40px;
+    }
+
+    .features-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background-color: #65D1CD;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 15px;
+      color: white;
+      font-weight: bold;
+    }
+
+    .feature-text {
+      font-size: 16px;
+    }
+
+    .disclaimer {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #666;
+    }
+
+    .forgot-password {
+      display: inline-block;
+      margin-top: 10px;
+      color: #34303D;
+      text-decoration: underline;
+    }
+
+    .remember-device {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    .additional-fields {
+      display: none;
+    }
+
+    .additional-fields.active {
+      display: block;
+    }
+
+    .date-inputs {
+      display: flex;
+      gap: 10px;
+    }
+
+    .date-inputs .form-control {
+      flex: 1;
+    }
+
+    /* Responsive chat button */
+    .chat-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #000;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">
+    <img src="img/iqos-logo.png" alt="IQOS" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMzAiPjx0ZXh0IHg9IjEwIiB5PSIyMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjIwIiBmb250LXdlaWdodD0iYm9sZCI+SVFPUzwvdGV4dD48L3N2Zz4='; this.style.width='100px';">
+  </div>
+
+  <div id="login-register-view" class="auth-container">
+    <h1 id="auth-title">Moje konto</h1>
+
+    <div class="auth-option" id="register-option">
+      <div class="auth-option-radio" id="register-radio"></div>
+      <div>Nie masz konta? Zarejestruj się.</div>
+    </div>
+
+    <div class="auth-option" id="login-option">
+      <div class="auth-option-radio selected" id="login-radio"></div>
+      <div>Zaloguj się</div>
+    </div>
+
+    <!-- Login Form -->
+    <div class="auth-form active" id="login-form">
+      <div class="form-group">
+        <input type="email" class="form-control" id="login-email" placeholder="Adres e-mail">
+      </div>
+
+      <div class="form-group">
+        <input type="password" class="form-control" id="login-password" placeholder="Hasło">
+      </div>
+
+      <div class="remember-device">
+        <div class="checkbox-group">
+          <input type="checkbox" id="remember-device" class="checkbox-input">
+          <label for="remember-device" class="checkbox-label">Zapamiętaj mnie na tym urządzeniu</label>
+        </div>
+        <a href="#" class="forgot-password">Nie pamiętasz hasła?</a>
+      </div>
+
+      <button class="btn-primary" id="login-btn">Zaloguj się</button>
+    </div>
+
+    <!-- Registration Form -->
+    <div class="auth-form" id="register-form">
+      <div class="form-group">
+        <input type="email" class="form-control" id="register-email" placeholder="Adres e-mail">
+      </div>
+
+      <div class="form-group">
+        <input type="password" class="form-control" id="register-password" placeholder="Hasło">
+      </div>
+
+      <div class="password-requirements">
+        Hasło musi mieć przynajmniej 8 znaków i spełniać poniższe wymagania:
+        <div class="password-requirement">Zawiera minimum 1 wielką literę</div>
+        <div class="password-requirement">Zawiera minimum 1 cyfrę</div>
+        <div class="password-requirement">Zawiera minimum 1 małą literę</div>
+      </div>
+
+      <div class="additional-fields" id="registration-fields">
+        <h2 style="margin: 30px 0 20px;">Twoje dane</h2>
+        <p style="margin-bottom: 20px;">Imię i nazwisko powinny zgadzać się z Twoim dokumentem tożsamości.</p>
+
+        <div class="form-group">
+          <input type="text" class="form-control" id="first-name" placeholder="Imię">
+        </div>
+
+        <div class="form-group">
+          <input type="text" class="form-control" id="last-name" placeholder="Nazwisko">
+        </div>
+
+        <h2 style="margin: 30px 0 20px;">Data urodzenia</h2>
+        <p style="margin-bottom: 20px;">Musimy potwierdzić, że jesteś osobą pełnoletnią i możesz kupić wyroby tytoniowe</p>
+
+        <div class="form-group">
+          <div class="date-inputs">
+            <input type="text" class="form-control" id="day" placeholder="DD" maxlength="2">
+            <input type="text" class="form-control" id="month" placeholder="MM" maxlength="2">
+            <input type="text" class="form-control" id="year" placeholder="YYYY" maxlength="4">
+          </div>
+        </div>
+
+        <h2 style="margin: 30px 0 20px;">Adres zamieszkania</h2>
+
+        <div class="form-group">
+          <input type="text" class="form-control" id="street" placeholder="Nazwa ulicy (Opcjonalne)">
+        </div>
+
+        <div class="form-group">
+          <input type="text" class="form-control" id="house-number" placeholder="Numer domu (Opcjonalne)">
+        </div>
+
+        <div class="form-group">
+          <input type="text" class="form-control" id="apartment" placeholder="Mieszkanie (Opcjonalne)">
+        </div>
+
+        <div class="form-group">
+          <input type="text" class="form-control" id="city" placeholder="Miasto (Opcjonalne)">
+        </div>
+
+        <div class="form-group">
+          <input type="text" class="form-control" id="postal-code" placeholder="Kod pocztowy (Opcjonalne)">
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; align-items: center; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
+            <div style="flex-grow: 1;">
+              <div style="font-size: 14px; color: #666;">Język</div>
+              <div style="font-size: 16px;">Polski</div>
+            </div>
+            <div style="width: 24px; height: 24px; border-radius: 50%; background-color: #8BB53E; display: flex; justify-content: center; align-items: center; color: white;">✓</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; align-items: center; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
+            <div style="flex-grow: 1;">
+              <div style="font-size: 14px; color: #666;">Kraj</div>
+              <div style="font-size: 16px;">Polska</div>
+            </div>
+          </div>
+        </div>
+
+        <h2 style="margin: 30px 0 20px;">Numer telefonu</h2>
+        <p style="margin-bottom: 20px;">Podaj swój numer telefonu komórkowego. (np. 666 777 888).</p>
+
+        <div class="form-group">
+          <div style="display: flex; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+            <div style="padding: 15px; background-color: #f5f5f5; display: flex; align-items: center;">
+              <img src="img/pl-flag.png" alt="PL" style="width: 20px; margin-right: 5px;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIxMCI+PHJlY3QgZmlsbD0id2hpdGUiIHdpZHRoPSIyMCIgaGVpZ2h0PSI1Ii8+PHJlY3QgZmlsbD0icmVkIiB3aWR0aD0iMjAiIGhlaWdodD0iNSIgeT0iNSIvPjwvc3ZnPg==';">
+              +48
+            </div>
+            <input type="tel" class="form-control" id="phone" placeholder="Numer telefonu komórkowego" style="border: none; flex-grow: 1;">
+          </div>
+        </div>
+      </div>
+
+      <div class="checkbox-group" id="terms-consent-container" style="margin-top: 20px;">
+        <input type="checkbox" id="terms-consent" class="checkbox-input">
+        <label for="terms-consent" class="checkbox-label">Oświadczam, że znam i akceptuję <a href="#">Regulamin IQOS</a> i <a href="#">Politykę Prywatności</a>*</label>
+      </div>
+
+      <div class="checkbox-group" id="marketing-consent-container">
+        <input type="checkbox" id="marketing-consent" class="checkbox-input">
+        <label for="marketing-consent" class="checkbox-label">
+          Wyrażam zgodę na przekazywanie mi przez Philip Morris Polska Distribution Sp. z o.o. z siedzibą w Krakowie (PMPL-D) informacji handlowych, w tym o niepublicznych promocjach i programach konsumenckich, w tym o kodach rabatowych, na mój numer telefonu (w tym sms, mms) oraz adres email.
+
+          <p style="margin-top: 10px; font-weight: bold;">Ważne!</p>
+
+          <p style="margin-top: 5px;">Bez zaznaczenia tego pola nie będziemy mogli wysyłać do Ciebie kodów rabatowych na wkłady tytoniowe.</p>
+
+          <p style="margin-top: 5px;">Zgodę można wycofać w dowolnym momencie, wycofanie zgody nie ma wpływu na zgodność z prawem przetwarzania, którego dokonano na podstawie zgody przed jej wycofaniem.</p>
+
+          <p style="margin-top: 5px;">* wymagane</p>
+        </label>
+      </div>
+
+      <button class="btn-primary" id="next-step-btn">Dalej</button>
+      <button class="btn-primary" id="register-btn" style="display: none;">Stwórz konto</button>
+    </div>
+  </div>
+
+  <div class="features-section">
+    <h2 class="features-title">Zapewniamy:</h2>
+
+    <div class="feature-item">
+      <div class="feature-icon">✓</div>
+      <div class="feature-text">Darmową dostawę</div>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-icon">✓</div>
+      <div class="feature-text">60 dni na bezpłatny zwrot</div>
+    </div>
+
+    <div class="feature-item">
+      <div class="feature-icon">✓</div>
+      <div class="feature-text">Możliwość płatności po 30 dniach</div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    <p>Ta strona jest dedykowana wyłącznie dla dorosłych palaczy i jest sklepem internetowym rekwizytu tytoniowego podgrzewającego tytoń. Ten produkt nie jest wolny od ryzyka i dostarcza nikotynę, która jest uzależniająca. Wyłącznie do użytku przez dorosłych.</p>
+  </div>
+</div>
+
+<!-- Замените текущий JavaScript в login.html на этот обновленный код -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Option selection
+    const registerOption = document.getElementById('register-option');
+    const loginOption = document.getElementById('login-option');
+    const registerRadio = document.getElementById('register-radio');
+    const loginRadio = document.getElementById('login-radio');
+    const registerForm = document.getElementById('register-form');
+    const loginForm = document.getElementById('login-form');
+    const authTitle = document.getElementById('auth-title');
+    const registrationFields = document.getElementById('registration-fields');
+    const termsConsentContainer = document.getElementById('terms-consent-container');
+    const marketingConsentContainer = document.getElementById('marketing-consent-container');
+    const nextStepBtn = document.getElementById('next-step-btn');
+    const registerBtn = document.getElementById('register-btn');
+    const errorModal = document.getElementById('error-modal');
+    const closeError = document.getElementById('close-error');
+
+    // Switch to register view
+    registerOption.addEventListener('click', function() {
+      registerRadio.classList.add('selected');
+      loginRadio.classList.remove('selected');
+      registerForm.classList.add('active');
+      loginForm.classList.remove('active');
+      authTitle.textContent = 'Moje konto';
+    });
+
+    // Switch to login view
+    loginOption.addEventListener('click', function() {
+      loginRadio.classList.add('selected');
+      registerRadio.classList.remove('selected');
+      loginForm.classList.add('active');
+      registerForm.classList.remove('active');
+      authTitle.textContent = 'Moje konto';
+    });
+
+    // Close error modal
+    closeError.addEventListener('click', function() {
+      errorModal.style.display = 'none';
+    });
+
+    // Close error modal when clicking outside
+    errorModal.addEventListener('click', function(event) {
+      if (event.target === errorModal) {
+        errorModal.style.display = 'none';
+      }
+    });
+
+    // Next step in registration
+    nextStepBtn.addEventListener('click', function() {
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      const termsConsent = document.getElementById('terms-consent').checked;
+
+      if (!email) {
+        alert('Wprowadź adres e-mail.');
+        return;
+      }
+
+      if (!validateEmail(email)) {
+        alert('Wprowadź prawidłowy adres e-mail.');
+        return;
+      }
+
+      if (!password) {
+        alert('Wprowadź hasło.');
+        return;
+      }
+
+      if (!validatePassword(password)) {
+        alert('Hasło musi mieć przynajmniej 8 znaków oraz zawierać minimum 1 wielką literę, 1 cyfrę i 1 małą literę.');
+        return;
+      }
+
+      if (!termsConsent) {
+        alert('Musisz zaakceptować Regulamin IQOS i Politykę Prywatności.');
+        return;
+      }
+
+      // Show additional registration fields
+      registrationFields.classList.add('active');
+      termsConsentContainer.style.display = 'none';
+      marketingConsentContainer.style.display = 'none';
+      nextStepBtn.style.display = 'none';
+      registerBtn.style.display = 'block';
+    });
+
+    // Complete registration
+    registerBtn.addEventListener('click', function() {
+      const firstName = document.getElementById('first-name').value;
+      const lastName = document.getElementById('last-name').value;
+      const day = document.getElementById('day').value;
+      const month = document.getElementById('month').value;
+      const year = document.getElementById('year').value;
+      const phone = document.getElementById('phone').value;
+
+      if (!firstName) {
+        alert('Wprowadź imię.');
+        return;
+      }
+
+      if (!lastName) {
+        alert('Wprowadź nazwisko.');
+        return;
+      }
+
+      if (!day || !month || !year) {
+        alert('Wprowadź datę urodzenia.');
+        return;
+      }
+
+      const birthDate = new Date(`${year}-${month}-${day}`);
+      const today = new Date();
+      const age = today.getFullYear() - birthDate.getFullYear();
+
+      if (isNaN(birthDate.getTime())) {
+        alert('Wprowadź prawidłową datę urodzenia.');
+        return;
+      }
+
+      if (age < 18) {
+        alert('Musisz mieć ukończone 18 lat, aby utworzyć konto.');
+        return;
+      }
+
+      if (!phone) {
+        alert('Wprowadź numer telefonu.');
+        return;
+      }
+
+      // Create user account
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      const marketingConsent = document.getElementById('marketing-consent').checked;
+
+      const userData = {
+        email: email,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
+        birthDate: `${year}-${month}-${day}`,
+        phone: phone,
+        street: document.getElementById('street').value,
+        houseNumber: document.getElementById('house-number').value,
+        apartment: document.getElementById('apartment').value,
+        city: document.getElementById('city').value,
+        postalCode: document.getElementById('postal-code').value,
+        language: 'Polski',
+        country: 'Polska',
+        marketingConsent: marketingConsent,
+        isLoggedIn: true
+      };
+
+      // Save user data to localStorage
+      localStorage.setItem('iqosUser', JSON.stringify(userData));
+
+      // Redirect to main page
+      window.location.href = 'index.html';
+    });
+
+    // Login functionality
+    document.getElementById('login-btn').addEventListener('click', function() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const rememberDevice = document.getElementById('remember-device').checked;
+
+      if (!email) {
+        alert('Wprowadź adres e-mail.');
+        return;
+      }
+
+      if (!password) {
+        alert('Wprowadź hasło.');
+        return;
+      }
+
+      // Check if user exists in localStorage
+      const storedUser = localStorage.getItem('iqosUser');
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        if (userData.email === email && userData.password === password) {
+          // Update login status
+          userData.isLoggedIn = true;
+          localStorage.setItem('iqosUser', JSON.stringify(userData));
+
+          // Redirect to main page
+          window.location.href = 'index.html';
+        } else {
+          // Show error modal for incorrect credentials
+          errorModal.style.display = 'flex';
+        }
+      } else {
+        // Show error modal for non-existent user
+        errorModal.style.display = 'flex';
+      }
+    });
+
+    // Helper functions
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+
+    function validatePassword(password) {
+      // At least 8 characters, 1 uppercase, 1 lowercase, 1 number
+      const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+      return re.test(password);
+    }
+
+    // Check if user was redirected after logout
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('logout') === 'true') {
+      loginOption.click(); // Switch to login view
+    }
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    // Добавляем ссылку на профиль при клике на иконку пользователя
+    const userIcon = document.querySelector('.icon:first-child'); // Выбираем первую иконку (пользователя)
+    if (userIcon) {
+      userIcon.addEventListener('click', function() {
+        // Проверяем, авторизован ли пользователь
+        const storedUser = localStorage.getItem('iqosUser');
+        if (storedUser && JSON.parse(storedUser).isLoggedIn) {
+          // Если авторизован - переходим на страницу профиля
+          window.location.href = 'account.html';
+        } else {
+          // Если не авторизован - переходим на страницу входа
+          window.location.href = 'login.html';
+        }
+      });
+    }
+  });
+</script>
+
+<!-- Также обновите код в файлах с основным меню (index.html, product pages) -->
+<!-- Замените обработчик выхода на следующий -->
+
+<!-- JavaScript для обработки аутентификации - ОБНОВЛЕННАЯ ВЕРСИЯ -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Проверяем, авторизован ли пользователь
+    const storedUser = localStorage.getItem('iqosUser');
+    let userLoggedIn = false;
+
+    if (storedUser) {
+      const userData = JSON.parse(storedUser);
+      userLoggedIn = userData.isLoggedIn;
+    }
+
+    // Получаем элементы меню
+    const authMenuItem = document.getElementById('auth-menu-item');
+    const logoutMenuItem = document.getElementById('logout-menu-item');
+
+    // Отображаем соответствующие пункты меню
+    if (userLoggedIn) {
+      authMenuItem.style.display = 'none';
+      logoutMenuItem.style.display = 'flex';
+    } else {
+      authMenuItem.style.display = 'flex';
+      logoutMenuItem.style.display = 'none';
+    }
+
+    // Обработчик клика по "Zaloguj się"
+    authMenuItem.addEventListener('click', function() {
+      window.location.href = 'login.html';
+    });
+
+    // Обработчик клика по "Wyloguj się"
+    logoutMenuItem.addEventListener('click', function() {
+      // Если пользователь авторизован, меняем его статус
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        userData.isLoggedIn = false;
+        localStorage.setItem('iqosUser', JSON.stringify(userData));
+      }
+
+      // Перенаправляем на страницу входа
+      window.location.href = 'login.html?logout=true';
+    });
+
+    // Добавление имени пользователя в хедер (опционально)
+    if (userLoggedIn) {
+      const userData = JSON.parse(storedUser);
+      // Здесь можно добавить имя пользователя в хедер, если нужно
+    }
+  });
+</script>
+<!-- Модальное окно с ошибкой -->
+<div id="error-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 3000; align-items: center; justify-content: center;">
+  <div style="background-color: white; width: 90%; max-width: 500px; border-radius: 8px; padding: 30px; position: relative;">
+    <div style="position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer;" id="close-error">✕</div>
+
+    <div style="display: flex; align-items: flex-start; margin-bottom: 30px;">
+      <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #D32F2F; color: white; display: flex; justify-content: center; align-items: center; margin-right: 20px; font-size: 24px; font-weight: bold;">!</div>
+      <div>
+        <h2 style="font-size: 28px; margin-bottom: 10px;">Uwaga</h2>
+        <p style="font-size: 18px; line-height: 1.5;">Nie rozpoznajemy tego konta. Sprawdź pisownię i spróbuj ponownie.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
