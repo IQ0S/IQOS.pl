@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moje konto | IQOS Polska</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'IQOS', Arial, sans-serif;
+    }
+
+    body {
+      background-color: #fff;
+      color: #34303D;
+    }
+
+    @font-face {
+      font-family: 'IQOS';
+      src: url('IQOS-Bold.woff2') format('woff2'), url('IQOS-Bold.woff') format('woff');
+      font-weight: bold;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'IQOS';
+      src: url('IQOS-Regular.woff2') format('woff2'), url('IQOS-Regular.woff') format('woff');
+      font-weight: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'IQOS';
+      src: url('IQOS-Light.woff2') format('woff2'), url('IQOS-Light.woff') format('woff');
+      font-weight: 300;
+      font-display: swap;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background-color: #fff;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .menu-icon {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .icons {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .icon {
+      font-size: 24px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .icon-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #65D1CD;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .welcome-section {
+      background-color: #f9f9f9;
+      padding: 20px;
+      position: relative;
+    }
+
+    .welcome-message {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 10px 0;
+      text-align: center;
+    }
+
+    .logout-link {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      color: #34303D;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
+    .account-section {
+      border-bottom: 1px solid #eee;
+    }
+
+    .section-header {
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .expand-icon {
+      font-size: 24px;
+      transition: transform 0.3s;
+    }
+
+    .expand-icon.expanded {
+      transform: rotate(180deg);
+    }
+
+    .section-content {
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, padding 0.3s ease;
+    }
+
+    .section-content.expanded {
+      max-height: 2000px;
+      padding: 20px;
+    }
+
+    .profile-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .profile-item:last-child {
+      border-bottom: none;
+    }
+
+    .profile-label {
+      font-weight: bold;
+    }
+
+    .profile-value {
+      text-align: right;
+    }
+
+    .edit-button {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #34303D;
+      text-decoration: none;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+
+    .edit-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .order-item {
+      padding: 20px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .order-details {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .order-label {
+      font-weight: bold;
+    }
+
+    .order-status {
+      font-weight: bold;
+    }
+
+    .order-status.canceled {
+      color: #D32F2F;
+    }
+
+    .order-status.completed {
+      color: #388E3C;
+    }
+
+    .order-status.processing {
+      color: #FFC107;
+    }
+
+    .no-orders {
+      padding: 40px 20px;
+      text-align: center;
+      color: #888;
+    }
+
+    /* Responsive chat button */
+    .chat-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #000;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+<div class="header">
+  <div class="menu-icon">☰</div>
+  <div class="logo">IQOS</div>
+  <div class="icons">
+    <div class="icon" id="account-icon">👤</div>
+    <div class="icon" id="cart-icon">🛒<span class="icon-badge" style="display: none;">0</span></div>
+  </div>
+</div>
+
+<div class="welcome-section">
+  <a href="#" class="logout-link" id="logout-link">Wyloguj</a>
+  <h1 class="welcome-message" id="welcome-message">Witaj</h1>
+</div>
+
+<div class="account-section">
+  <div class="section-header" id="account-header">
+    <div class="section-title">Moje konto</div>
+    <div class="expand-icon">▼</div>
+  </div>
+  <div class="section-content" id="account-content">
+    <div class="edit-button">
+      <span>Edytuj</span>
+      <svg class="edit-icon" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+      </svg>
+    </div>
+
+    <h2 style="margin-bottom: 20px;">Dane kontaktowe</h2>
+
+    <div class="profile-item">
+      <div class="profile-label">Imię i nazwisko</div>
+      <div class="profile-value" id="full-name"></div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">Data urodzenia</div>
+      <div class="profile-value" id="birth-date"></div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">Numer telefonu komórkowego</div>
+      <div class="profile-value" id="phone-number"></div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">Tytuł</div>
+      <div class="profile-value">Pan</div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">Język</div>
+      <div class="profile-value">Polski</div>
+    </div>
+
+    <h2 style="margin: 30px 0 20px;">INFORMACJE O DOSTAWIE</h2>
+
+    <div class="profile-item">
+      <div class="profile-label">Nazwa ulicy</div>
+      <div class="profile-value" id="street"></div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">Miasto</div>
+      <div class="profile-value" id="city"></div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">Kod pocztowy</div>
+      <div class="profile-value" id="postal-code"></div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">Kraj</div>
+      <div class="profile-value">Polska</div>
+    </div>
+
+    <h2 style="margin: 30px 0 20px;">E-mail</h2>
+
+    <div class="profile-item">
+      <div class="profile-label">Login:</div>
+      <div class="profile-value" id="login-email"></div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">Adres e-mail:</div>
+      <div class="profile-value" id="email"></div>
+    </div>
+
+    <h2 style="margin: 30px 0 20px;">Komunikacja marketingowa</h2>
+
+    <div class="profile-item">
+      <label class="profile-label" style="display: flex; align-items: center;">
+        <div style="width: 24px; height: 24px; border-radius: 4px; background-color: #ccc; display: flex; justify-content: center; align-items: center; margin-right: 10px; color: white;">✓</div>
+        Oświadczam, że znam i akceptuję <a href="#" style="color: #34303D;">Regulamin IQOS</a> i <a href="#" style="color: #34303D;">Politykę Prywatności</a>
+      </label>
+    </div>
+
+    <div class="profile-item">
+      <label class="profile-label" style="display: flex; align-items: flex-start;">
+        <div id="marketing-consent-indicator" style="width: 24px; height: 24px; border-radius: 4px; background-color: #ccc; display: flex; justify-content: center; align-items: center; margin-right: 10px; margin-top: 3px; color: white;">✓</div>
+        <div>
+          Wyrażam zgodę na przekazywanie mi przez Philip Morris Polska Distribution Sp. z o.o. z siedzibą w Krakowie (PMPL-D) informacji handlowych, w tym o niepublicznych promocjach i programach konsumenckich, w tym o kodach rabatowych, na mój numer telefonu (w tym sms, mms) oraz adres email.
+
+          <p style="margin-top: 15px; font-weight: bold;">Ważne!</p>
+
+          <p style="margin-top: 5px;">Bez zaznaczenia tego pola nie będziemy mogli wysyłać do Ciebie kodów rabatowych na wkłady tytoniowe.</p>
+        </div>
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="account-section">
+  <div class="section-header" id="orders-header">
+    <div class="section-title">Historia zamówień</div>
+    <div class="expand-icon">▼</div>
+  </div>
+  <div class="section-content" id="orders-content">
+    <div id="orders-list">
+      <!-- Заказы будут добавлены через JavaScript -->
+    </div>
+  </div>
+</div>
+
+<div class="disclaimer" style="padding: 20px; background-color: #f9f9f9; text-align: center; margin-top: 40px; font-size: 14px; color: #666; line-height: 1.5;">
+  <p>Ta strona jest dedykowana wyłącznie dla dorosłych palaczy i jest sklepem internetowym rekwizytu tytoniowego podgrzewającego tytoń. Ten produkt nie jest wolny od ryzyka i dostarcza nikotynę, która jest uzależniająca. Wyłącznie do użytku przez dorosłych.</p>
+</div>
+
+<!-- Модальное окно меню -->
+<div id="main-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2000;">
+  <div style="background-color: white; width: 100%; height: 100%; max-width: 400px; position: relative; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee;">
+      <div style="font-size: 24px; visibility: hidden;">X</div>
+      <div style="font-size: 24px; font-weight: bold;">IQOS</div>
+      <div style="font-size: 24px; cursor: pointer;" id="close-main-menu">✕</div>
+    </div>
+
+    <div style="padding: 0 20px;">
+      <div style="padding: 30px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" id="menu-produkty">
+        <span style="font-size: 28px; font-weight: bold;">Produkty</span>
+        <span style="font-size: 28px;">›</span>
+      </div>
+
+
+
+
+
+      <div id="auth-menu-item" style="padding: 30px 0; border-bottom: 1px solid #eee; display: none; justify-content: space-between; align-items: center; cursor: pointer;">
+        <span style="font-size: 28px; font-weight: bold;">Zaloguj się</span>
+        <span style="font-size: 28px;">›</span>
+      </div>
+
+      <div id="account-menu-item" style="padding: 30px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+        <span style="font-size: 28px; font-weight: bold;">Moje konto</span>
+        <span style="font-size: 28px;">›</span>
+      </div>
+
+      <div id="logout-menu-item" style="padding: 30px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+        <span style="font-size: 28px; font-weight: bold;">Wyloguj się</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Подменю Produkty -->
+<div id="produkty-submenu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2100;">
+  <div style="background-color: white; width: 100%; height: 100%; max-width: 400px; position: relative; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee;">
+      <div style="font-size: 24px; cursor: pointer;" id="back-to-main-menu">←</div>
+      <div style="font-size: 24px; font-weight: bold;">Produkty</div>
+      <div style="font-size: 24px; cursor: pointer;" id="close-produkty-submenu">✕</div>
+    </div>
+
+    <div style="padding: 0 20px;">
+      <a href="index.html" style="text-decoration: none; color: inherit;">
+        <div style="padding: 30px 0; border-bottom: 1px solid #eee;">
+          <span style="font-size: 28px; font-weight: bold;">Seria IQOS ILUMA za 49 zł</span>
+        </div>
+      </a>
+
+      <div style="padding: 30px 0; border-bottom: 1px solid #eee;">
+        <span style="font-size: 28px; font-weight: bold;">lil SOLID Ez za 49 zł</span>
+      </div>
+
+
+      <div style="padding: 30px 0; border-bottom: 1px solid #eee;">
+        <div style="font-size: 28px; font-weight: bold; margin-bottom: 10px;">Oferty specjalne</div>
+        <div style="font-size: 18px; color: #666;">Zaloguj się i sprawdź</div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Проверяем, авторизован ли пользователь
+    const storedUser = localStorage.getItem('iqosUser');
+    if (!storedUser || !JSON.parse(storedUser).isLoggedIn) {
+      // Если пользователь не авторизован, перенаправляем на страницу входа
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const userData = JSON.parse(storedUser);
+
+    // Заполняем данные пользователя
+    document.getElementById('welcome-message').textContent = `Witaj ${userData.firstName} ${userData.lastName}`;
+    document.getElementById('full-name').textContent = `${userData.firstName} ${userData.lastName}`;
+
+    // Форматирование даты рождения
+    if (userData.birthDate) {
+      const parts = userData.birthDate.split('-');
+      document.getElementById('birth-date').textContent = `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    document.getElementById('phone-number').textContent = userData.phone || '';
+    document.getElementById('street').textContent = userData.street || '';
+    document.getElementById('city').textContent = userData.city || '';
+    document.getElementById('postal-code').textContent = userData.postalCode || '';
+    document.getElementById('login-email').textContent = userData.email || '';
+    document.getElementById('email').textContent = userData.email || '';
+
+    // Если пользователь согласился на маркетинговые коммуникации
+    if (userData.marketingConsent) {
+      document.getElementById('marketing-consent-indicator').style.backgroundColor = '#8BB53E';
+    } else {
+      document.getElementById('marketing-consent-indicator').style.backgroundColor = '#ccc';
+    }
+
+    // Отображаем историю заказов
+    const ordersList = document.getElementById('orders-list');
+
+    // Получаем заказы текущего пользователя
+    const userOrdersKey = `iqosOrders_${userData.email}`;
+    let userOrders = localStorage.getItem(userOrdersKey);
+
+    if (!userOrders || JSON.parse(userOrders).length === 0) {
+      // Если заказов нет, показываем сообщение
+      ordersList.innerHTML = '<div class="no-orders">Brak zamówień w historii.</div>';
+    } else {
+      // Если заказы есть, отображаем их
+      orders = JSON.parse(userOrders);
+
+      orders.forEach(order => {
+        const orderElement = document.createElement('div');
+        orderElement.className = 'order-item';
+
+        let statusClass = '';
+        if (order.status === 'Anulowane') statusClass = 'canceled';
+        else if (order.status === 'Dostarczone') statusClass = 'completed';
+        else statusClass = 'processing';
+
+        orderElement.innerHTML = `
+          <div class="order-details">
+            <div class="order-label">Data zamówienia:</div>
+            <div>${order.date}</div>
+          </div>
+          <div class="order-details">
+            <div class="order-label">Wartość zamówienia</div>
+            <div>${order.value.toFixed(2).replace('.', ',')} zł</div>
+          </div>
+          <div class="order-details">
+            <div class="order-label">Zamówienie:</div>
+            <div>${order.number}</div>
+          </div>
+          <div class="order-details">
+            <div class="order-label">Status zamówienia:</div>
+            <div class="order-status ${statusClass}">${order.status}</div>
+          </div>
+        `;
+
+        ordersList.appendChild(orderElement);
+      });
+    }
+
+    // Обработчики для раскрытия/сворачивания секций
+    const accountHeader = document.getElementById('account-header');
+    const accountContent = document.getElementById('account-content');
+    const accountExpandIcon = accountHeader.querySelector('.expand-icon');
+
+    accountHeader.addEventListener('click', function() {
+      accountContent.classList.toggle('expanded');
+      accountExpandIcon.classList.toggle('expanded');
+    });
+
+    const ordersHeader = document.getElementById('orders-header');
+    const ordersContent = document.getElementById('orders-content');
+    const ordersExpandIcon = ordersHeader.querySelector('.expand-icon');
+
+    ordersHeader.addEventListener('click', function() {
+      ordersContent.classList.toggle('expanded');
+      ordersExpandIcon.classList.toggle('expanded');
+    });
+
+    // Открываем первую секцию по умолчанию
+    accountHeader.click();
+
+    // Обработчик для выхода из аккаунта
+    document.getElementById('logout-link').addEventListener('click', function(e) {
+      e.preventDefault();
+      logout();
+    });
+
+    // Функция выхода из аккаунта
+    function logout() {
+      userData.isLoggedIn = false;
+      localStorage.setItem('iqosUser', JSON.stringify(userData));
+      window.location.href = 'login.html?logout=true';
+    }
+
+    // Обработка клика на иконке аккаунта
+    document.getElementById('account-icon').addEventListener('click', function() {
+      // Уже на странице аккаунта, ничего не делаем
+    });
+
+    // Обработка клика на иконке корзины
+    document.getElementById('cart-icon').addEventListener('click', function() {
+      window.location.href = 'Koszyk.html';
+    });
+
+    // Обновляем значок корзины
+    updateCartBadge();
+
+    function updateCartBadge() {
+      const cartData = localStorage.getItem('iqosCart');
+      if (cartData) {
+        const cart = JSON.parse(cartData);
+        const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+        const cartBadges = document.querySelectorAll('.icon-badge');
+        cartBadges.forEach(badge => {
+          if (itemCount > 0) {
+            badge.textContent = itemCount;
+            badge.style.display = 'flex';
+          } else {
+            badge.style.display = 'none';
+          }
+        });
+      }
+    }
+
+    // Обработчики для меню
+    const menuIcon = document.querySelector('.menu-icon');
+    const mainMenu = document.getElementById('main-menu');
+    const closeMainMenu = document.getElementById('close-main-menu');
+    const menuProdukty = document.getElementById('menu-produkty');
+    const produktySubmenu = document.getElementById('produkty-submenu');
+    const closeProduktySubmenu = document.getElementById('close-produkty-submenu');
+    const backToMainMenu = document.getElementById('back-to-main-menu');
+    const logoutMenuItem = document.getElementById('logout-menu-item');
+    const accountMenuItem = document.getElementById('account-menu-item');
+
+    // Открытие основного меню при клике на иконку меню
+    menuIcon.addEventListener('click', function() {
+      mainMenu.style.display = 'block';
+      document.body.style.overflow = 'hidden'; // Запрещаем прокрутку основной страницы
+    });
+
+    // Закрытие основного меню
+    closeMainMenu.addEventListener('click', function() {
+      mainMenu.style.display = 'none';
+      document.body.style.overflow = ''; // Возвращаем прокрутку
+    });
+
+    // Открытие подменю Produkty
+    menuProdukty.addEventListener('click', function() {
+      mainMenu.style.display = 'none';
+      produktySubmenu.style.display = 'block';
+    });
+
+    // Закрытие подменю Produkty
+    closeProduktySubmenu.addEventListener('click', function() {
+      produktySubmenu.style.display = 'none';
+      document.body.style.overflow = ''; // Возвращаем прокрутку
+    });
+
+    // Возврат к основному меню
+    backToMainMenu.addEventListener('click', function() {
+      produktySubmenu.style.display = 'none';
+      mainMenu.style.display = 'block';
+    });
+
+    // Закрытие меню при клике вне его области
+    window.addEventListener('click', function(event) {
+      if (event.target === mainMenu) {
+        mainMenu.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+      if (event.target === produktySubmenu) {
+        produktySubmenu.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Выход из аккаунта через меню
+    logoutMenuItem.addEventListener('click', function() {
+      logout();
+    });
+
+    // Переход на страницу аккаунта (уже здесь)
+    accountMenuItem.addEventListener('click', function() {
+      mainMenu.style.display = 'none';
+      document.body.style.overflow = '';
+    });
+  });
+  // Этот код нужно вставить в <head> или перед закрывающим тегом </body> на странице index.html
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // 1. Заменяем эмодзи-иконку пользователя на SVG
+    const userIcon = document.querySelector('.icon:first-child');
+    if (userIcon) {
+      // Создаем SVG иконку пользователя
+      const userSvg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="5"></circle>
+        <path d="M20 21a8 8 0 1 0-16 0"></path>
+      </svg>
+    `;
+
+      // Удаляем эмодзи и вставляем SVG
+      userIcon.innerHTML = userSvg;
+
+      // Добавляем обработчик клика (если его еще нет)
+      userIcon.addEventListener('click', function() {
+        const storedUser = localStorage.getItem('iqosUser');
+        if (storedUser && JSON.parse(storedUser).isLoggedIn) {
+          window.location.href = 'account.html';
+        } else {
+          window.location.href = 'login.html';
+        }
+      });
+    }
+
+    // 2. Заменяем эмодзи-иконку корзины на SVG
+    const cartIcon = document.querySelector('.icon:nth-child(2)');
+    if (cartIcon) {
+      // Проверяем, есть ли уже значок badge
+      let badge = cartIcon.querySelector('.icon-badge');
+
+      // Создаем SVG иконку корзины
+      const cartSvg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2h12l3 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9l3-7z"></path>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+    `;
+
+      // Удаляем эмодзи и вставляем SVG
+      cartIcon.innerHTML = cartSvg;
+
+      // Если значок badge уже был, добавляем его заново
+      if (badge) {
+        cartIcon.appendChild(badge);
+      } else {
+        // Если значка не было, создаем его
+        badge = document.createElement('span');
+        badge.className = 'icon-badge';
+        badge.style.position = 'absolute';
+        badge.style.top = '-8px';
+        badge.style.right = '-8px';
+        badge.style.backgroundColor = '#65D1CD';
+        badge.style.color = 'white';
+        badge.style.borderRadius = '50%';
+        badge.style.width = '20px';
+        badge.style.height = '20px';
+        badge.style.display = 'none'; // Изначально скрыт
+        badge.style.justifyContent = 'center';
+        badge.style.alignItems = 'center';
+        badge.style.fontSize = '12px';
+        badge.style.fontWeight = 'bold';
+
+        // Добавляем значок в иконку корзины
+        cartIcon.appendChild(badge);
+      }
+
+      // Добавляем обработчик клика (если его еще нет)
+      cartIcon.addEventListener('click', function() {
+        window.location.href = 'Koszyk.html';
+      });
+    }
+
+    // 3. Обновляем значок корзины при загрузке страницы
+    function updateCartBadge() {
+      const cartData = localStorage.getItem('iqosCart');
+      if (cartData) {
+        const cart = JSON.parse(cartData);
+        const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+        const cartBadges = document.querySelectorAll('.icon-badge');
+        cartBadges.forEach(badge => {
+          if (itemCount > 0) {
+            badge.textContent = itemCount;
+            badge.style.display = 'flex';
+          } else {
+            badge.style.display = 'none';
+          }
+        });
+      }
+    }
+
+    // 4. Обеспечиваем обновление значка корзины при добавлении товара
+    // Ищем функцию addProductToCart и модифицируем её для вызова updateCartBadge
+    const scripts = document.querySelectorAll('script');
+    let scriptModified = false;
+
+    scripts.forEach(script => {
+      if (script.textContent.includes('function addProductToCart') && !scriptModified) {
+        if (!script.textContent.includes('updateCartBadge();')) {
+          const modifiedScript = script.textContent.replace(
+            'localStorage.setItem(\'iqosCart\', JSON.stringify(cart));',
+            'localStorage.setItem(\'iqosCart\', JSON.stringify(cart));\n\n      // Обновляем значок корзины\n      updateCartBadge();'
+          );
+
+          // Создаем и выполняем модифицированный скрипт
+          const newScript = document.createElement('script');
+          newScript.textContent = modifiedScript;
+          document.body.appendChild(newScript);
+          scriptModified = true;
+        }
+      }
+    });
+
+    // Делаем функцию updateCartBadge глобально доступной
+    window.updateCartBadge = updateCartBadge;
+
+    // Обновляем значок корзины при загрузке страницы
+    updateCartBadge();
+  });
+  // Этот скрипт расширяет отображение истории заказов,
+  // добавляя детали о купленных товарах к каждому заказу
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Находим оригинальную функцию отображения заказов и расширяем её
+    const originalRenderOrders = window.renderCartItems;
+
+    // Проверяем, авторизован ли пользователь
+    const storedUser = localStorage.getItem('iqosUser');
+    if (!storedUser || !JSON.parse(storedUser).isLoggedIn) {
+      return; // Если пользователь не авторизован, прекращаем выполнение
+    }
+
+    const userData = JSON.parse(storedUser);
+
+    // Функция для отображения товаров заказа
+    function renderOrderItems(order) {
+      if (!order.items || order.items.length === 0) {
+        return '<div class="no-items">Brak szczegółów zamówienia</div>';
+      }
+
+      let itemsHtml = '<div class="order-items">';
+
+      // Заголовок списка товаров
+      itemsHtml += '<div class="order-items-header">Zakupione produkty:</div>';
+
+      // Перебираем все товары в заказе
+      order.items.forEach(item => {
+        const totalItemPrice = (item.price * item.quantity).toFixed(2).replace('.', ',');
+
+        itemsHtml += `
+        <div class="order-item-details">
+          <div class="order-item-image">
+            <img src="${item.image}" alt="${item.name}" style="max-width: 60px; max-height: 60px;">
+          </div>
+          <div class="order-item-info">
+            <div class="order-item-name">${item.name}</div>
+            <div class="order-item-color">Kolor: ${item.colorName}</div>
+            <div class="order-item-quantity">Ilość: ${item.quantity}</div>
+          </div>
+          <div class="order-item-price">${totalItemPrice} zł</div>
+        </div>
+      `;
+      });
+
+      itemsHtml += '</div>';
+      return itemsHtml;
+    }
+
+    // Получаем заказы пользователя
+    const userOrdersKey = `iqosOrders_${userData.email}`;
+    let userOrders = localStorage.getItem(userOrdersKey);
+
+    if (userOrders) {
+      // Получаем DOM-элемент для отображения заказов
+      const ordersList = document.getElementById('orders-list');
+      if (!ordersList) return;
+
+      // Очищаем текущее содержимое
+      ordersList.innerHTML = '';
+
+      // Парсим заказы
+      const orders = JSON.parse(userOrders);
+
+      // Если заказов нет, показываем сообщение
+      if (orders.length === 0) {
+        ordersList.innerHTML = '<div class="no-orders">Brak zamówień w historii.</div>';
+        return;
+      }
+
+      // Добавляем стили для новых элементов
+      const style = document.createElement('style');
+      style.textContent = `
+      .order-items {
+        margin-top: 20px;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+      }
+
+      .order-items-header {
+        font-weight: bold;
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+
+      .order-item-details {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+      }
+
+      .order-item-image {
+        margin-right: 15px;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .order-item-info {
+        flex-grow: 1;
+      }
+
+      .order-item-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .order-item-color, .order-item-quantity {
+        font-size: 14px;
+        color: #555;
+      }
+
+      .order-item-price {
+        font-weight: bold;
+        margin-left: 15px;
+      }
+
+      .order-toggle {
+        margin-top: 10px;
+        text-align: center;
+        color: #34303D;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 5px 0;
+        font-size: 14px;
+      }
+
+      .order-toggle:hover {
+        text-decoration: underline;
+      }
+
+      .order-items-container {
+        display: none;
+      }
+
+      .order-items-container.expanded {
+        display: block;
+      }
+    `;
+
+      document.head.appendChild(style);
+
+      // Отображаем заказы
+      orders.forEach(order => {
+        // Создаем элемент заказа
+        const orderElement = document.createElement('div');
+        orderElement.className = 'order-item';
+
+        // Определяем класс статуса
+        let statusClass = '';
+        if (order.status === 'Anulowane') statusClass = 'canceled';
+        else if (order.status === 'Dostarczone') statusClass = 'completed';
+        else statusClass = 'processing';
+
+        // Создаем HTML для основной информации о заказе
+        orderElement.innerHTML = `
+        <div class="order-details">
+          <div class="order-label">Data zamówienia:</div>
+          <div>${order.date}</div>
+        </div>
+        <div class="order-details">
+          <div class="order-label">Wartość zamówienia:</div>
+          <div>${order.value.toFixed(2).replace('.', ',')} zł</div>
+        </div>
+        <div class="order-details">
+          <div class="order-label">Zamówienie:</div>
+          <div>${order.number}</div>
+        </div>
+        <div class="order-details">
+          <div class="order-label">Status zamówienia:</div>
+          <div class="order-status ${statusClass}">${order.status}</div>
+        </div>
+        <div class="order-toggle">Pokaż szczegóły</div>
+        <div class="order-items-container">
+          ${renderOrderItems(order)}
+        </div>
+      `;
+
+        // Добавляем заказ в список
+        ordersList.appendChild(orderElement);
+
+        // Добавляем обработчик для кнопки "Показать детали"
+        const toggleButton = orderElement.querySelector('.order-toggle');
+        const itemsContainer = orderElement.querySelector('.order-items-container');
+
+        toggleButton.addEventListener('click', function() {
+          // Переключаем видимость контейнера товаров
+          itemsContainer.classList.toggle('expanded');
+
+          // Меняем текст кнопки
+          if (itemsContainer.classList.contains('expanded')) {
+            toggleButton.textContent = 'Ukryj szczegóły';
+          } else {
+            toggleButton.textContent = 'Pokaż szczegóły';
+          }
+        });
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

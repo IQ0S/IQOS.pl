@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lil SOLID Ez | Podgrzewacz tytoniu</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'IQOS', Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      color: #34303D;
+    }
+
+    @font-face {
+      font-family: 'IQOS';
+      src: url('IQOS-Bold.woff2') format('woff2'), url('IQOS-Bold.woff') format('woff');
+      font-weight: bold;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'IQOS';
+      src: url('IQOS-Regular.woff2') format('woff2'), url('IQOS-Regular.woff') format('woff');
+      font-weight: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'IQOS';
+      src: url('IQOS-Light.woff2') format('woff2'), url('IQOS-Light.woff') format('woff');
+      font-weight: 300;
+      font-display: swap;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background-color: #fff;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .menu-icon {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .icons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .icon {
+      font-size: 24px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .icon-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background-color: #65D1CD;
+      color: white;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      font-size: 10px;
+      font-weight: bold;
+      text-align: center;
+      line-height: 16px;
+    }
+
+    .back-button {
+      display: flex;
+      align-items: center;
+      padding: 16px 24px;
+      font-size: 18px;
+      cursor: pointer;
+      color: #34303D;
+      text-decoration: none;
+    }
+
+    .back-button svg {
+      margin-right: 10px;
+    }
+
+    .product-container {
+      padding: 0 20px;
+    }
+
+    /* Стили для слайдера изображений */
+    .product-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      padding: 40px 0;
+    }
+
+    #product-images-container {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .color-images {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .color-images.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .product-slide {
+      position: absolute;
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .product-slide.active {
+      opacity: 1;
+    }
+
+    /* Навигационные кнопки слайдера */
+    .slider-nav {
+      width: 100%;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 2;
+    }
+
+    .slider-arrow {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 20px;
+      color: #34303D;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+    }
+
+    .slider-arrow:hover {
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Индикаторы слайдов (точки) */
+    .color-indicator {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .color-dots {
+      display: flex;
+      gap: 10px;
+    }
+
+    .color-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #ccc;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .color-dot.active {
+      background-color: #34303D;
+    }
+
+    /* Выбор цвета */
+    .color-options {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .color-option {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 1px solid #ddd;
+    }
+
+    .color-option.active {
+      border: 2px solid #34303D;
+    }
+
+    .product-title {
+      font-size: 32px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .product-rating {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .stars {
+      color: #C29A69;
+      margin-right: 10px;
+    }
+
+    .rating-count {
+      color: #999;
+    }
+
+    .color-name {
+      font-size: 20px;
+      margin: 20px 0;
+    }
+
+    .product-price {
+      font-size: 30px;
+      font-weight: bold;
+      margin: 30px 0;
+    }
+
+    .add-to-cart {
+      background-color: #34303D;
+      color: white;
+      padding: 15px;
+      border-radius: 30px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 20px 0 40px;
+    }
+
+    .product-description {
+      margin: 40px 0;
+      line-height: 1.6;
+    }
+
+    .feature {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background-color: #65D1CD;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 20px;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .feature-text {
+      flex-grow: 1;
+      line-height: 1.4;
+    }
+
+    .video-section {
+      margin: 40px 0;
+      text-align: center;
+    }
+
+    .video-section h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%; /* соотношение сторон 16:9 */
+      background-color: #2E3847;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .video-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .play-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .play-button::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 15px 0 15px 25px;
+      border-color: transparent transparent transparent white;
+      margin-left: 5px;
+    }
+
+    .benefits-section {
+      margin: 40px 0;
+    }
+
+    .benefits-section h2 {
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+
+    .benefits-row {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: center;
+    }
+
+    .benefit-icon {
+      flex-shrink: 0;
+      width: 60px;
+      height: 60px;
+      margin-right: 20px;
+    }
+
+    .benefit-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .benefit-text {
+      flex-grow: 1;
+    }
+
+    .benefit-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .benefit-description {
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .product-components {
+      background-color: #34303D;
+      padding: 40px 20px;
+      color: white;
+      margin: 40px -20px;
+    }
+
+    .product-components h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .components-container {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .component-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .component-item img {
+      margin-bottom: 20px;
+      max-width: 120px;
+      max-height: 150px;
+    }
+
+    .component-number {
+      width: 30px;
+      height: 30px;
+      background-color: #65D1CD;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .component-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .component-description {
+      font-size: 14px;
+      color: #ccc;
+      max-width: 200px;
+    }
+
+    .fixed-bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: white;
+      padding: 15px;
+      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .fixed-bottom-bar .product-info {
+      flex-grow: 1;
+    }
+
+    .fixed-bottom-bar .product-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .fixed-bottom-bar .product-price {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .fixed-bottom-bar .add-to-cart {
+      margin: 0;
+      padding: 10px 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Цвета для выбора */
+    .green { background-color: #8dd3c7; }
+    .black { background-color: #444444; }
+    .blue { background-color: #a6cee3; }
+    .pinc { background-color: #d2b48c; }
+    .white { background-color: #ffffff; border: 1px solid #ddd; }
+
+    /* Disclaimer */
+    .disclaimer {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #f0f0f0;
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    /* Модальное окно подтверждения */
+    #add-to-cart-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+    }
+
+    #close-modal-button {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    /* Чат-кнопка */
+    .chat-button {
+      position: fixed;
+      right: 20px;
+      bottom: 80px;
+      background-color: #34303D;
+      color: white;
+      border-radius: 30px;
+      width: 160px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      transform: rotate(-90deg);
+      transform-origin: right bottom;
+      cursor: pointer;
+      z-index: 900;
+    }
+  </style>
+</head>
+<body>
+<div class="header">
+  <div class="menu-icon">☰</div>
+  <div class="logo">IQOS</div>
+  <div class="icons">
+    <div class="icon" id="account-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="5"></circle>
+        <path d="M20 21a8 8 0 1 0-16 0"></path>
+      </svg>
+    </div>
+    <div class="icon" id="cart-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2h12l3 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9l3-7z"></path>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span class="icon-badge">0</span>
+    </div>
+  </div>
+</div>
+
+<a href="index.html" class="back-button">
+  <svg width="24" height="24" viewBox="0 0 24 24">
+    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="#34303D"/>
+  </svg>
+  Wróć do listy produktów
+</a>
+
+<div class="product-container">
+  <div class="product-image">
+    <!-- Контейнер для слайдера изображений -->
+    <div id="product-images-container">
+      <!-- Белый цвет (изначально активный) -->
+      <div class="color-images active" data-color="white">
+        <img src="img/lil white1.png" alt="lil SOLID Ez w kolorze White" class="product-slide active" data-slide="0">
+        <img src="img/lil white2.png" alt="lil SOLID Ez w kolorze White" class="product-slide" data-slide="1">
+        <img src="img/lil white3.png" alt="lil SOLID Ez w kolorze White" class="product-slide" data-slide="2">
+        <img src="img/lil white4.png" alt="lil SOLID Ez w kolorze White" class="product-slide" data-slide="3">
+      </div>
+      <!-- Черный цвет -->
+      <div class="color-images" data-color="black">
+        <img src="img/lil black1.png" alt="lil SOLID Ez w kolorze Black" class="product-slide active" data-slide="0">
+        <img src="img/lil black2.png" alt="lil SOLID Ez w kolorze Black" class="product-slide" data-slide="1">
+        <img src="img/lil black3.png" alt="lil SOLID Ez w kolorze Black" class="product-slide" data-slide="2">
+        <img src="img/lil black4.png" alt="lil SOLID Ez w kolorze Black" class="product-slide" data-slide="3">
+      </div>
+      <!-- Синий цвет -->
+      <div class="color-images" data-color="blue">
+        <img src="img/lil blue1.png" alt="lil SOLID Ez w kolorze Blue" class="product-slide active" data-slide="0">
+        <img src="img/lil blue2.png" alt="lil SOLID Ez w kolorze Blue" class="product-slide" data-slide="1">
+        <img src="img/lil blue3.png" alt="lil SOLID Ez w kolorze Blue" class="product-slide" data-slide="2">
+        <img src="img/lil blue4.png" alt="lil SOLID Ez w kolorze Blue" class="product-slide" data-slide="3">
+      </div>
+      <!-- Розовый цвет -->
+      <div class="color-images" data-color="pinc">
+        <img src="img/lil pinc1.png" alt="lil SOLID Ez w kolorze Pink" class="product-slide active" data-slide="0">
+        <img src="img/lil pinc2.png" alt="lil SOLID Ez w kolorze Pink" class="product-slide" data-slide="1">
+        <img src="img/lil pinc3.png" alt="lil SOLID Ez w kolorze Pink" class="product-slide" data-slide="2">
+        <img src="img/lil pinc4.png" alt="lil SOLID Ez w kolorze Pink" class="product-slide" data-slide="3">
+      </div>
+      <!-- Зеленый цвет -->
+      <div class="color-images" data-color="green">
+        <img src="img/lil green1.png" alt="lil SOLID Ez w kolorze Green" class="product-slide active" data-slide="0">
+        <img src="img/lil green2.png" alt="lil SOLID Ez w kolorze Green" class="product-slide" data-slide="1">
+        <img src="img/lil green3.png" alt="lil SOLID Ez w kolorze Green" class="product-slide" data-slide="2">
+        <img src="img/lil green4.png" alt="lil SOLID Ez w kolorze Green" class="product-slide" data-slide="3">
+      </div>
+    </div>
+
+    <!-- Стрелки навигации для слайдера -->
+    <div class="slider-nav">
+      <div class="slider-arrow prev">❮</div>
+      <div class="slider-arrow next">❯</div>
+    </div>
+  </div>
+
+  <div class="color-indicator">
+    <div class="color-dots">
+      <div class="color-dot active" data-slide="0"></div>
+      <div class="color-dot" data-slide="1"></div>
+      <div class="color-dot" data-slide="2"></div>
+      <div class="color-dot" data-slide="3"></div>
+    </div>
+  </div>
+
+  <h1 class="product-title">lil SOLID Ez</h1>
+
+  <div class="product-rating">
+    <div class="stars">★★★★☆</div>
+    <div class="rating-count">4.2 (51)</div>
+  </div>
+
+  <h2 class="color-name">White</h2>
+
+  <div class="color-options">
+    <div class="color-option green" data-color="green"></div>
+    <div class="color-option black" data-color="black"></div>
+    <div class="color-option blue" data-color="blue"></div>
+    <div class="color-option pinc" data-color="pinc"></div>
+    <div class="color-option white active" data-color="white"></div>
+  </div>
+
+  <div class="product-price">49,00 zł</div>
+
+  <div class="add-to-cart">Dodaj do koszyka</div>
+
+  <div class="product-description">
+    <p>lil SOLID Ez to <strong>prosty w obsłudze i jednoczęściowy</strong> podgrzewacz tytoniu. Podgrzewa prawdziwy tytoń. Bez ognia, bez popiołu.</p>
+    <p>Umożliwia podgrzanie aż 3 wkładów tytoniowych jeden po drugim, bez konieczności ładowania.</p>
+    <p>Do użytku z <strong>wkładami tytoniowymi Fiit</strong>.</p>
+  </div>
+
+  <div class="feature">
+    <div class="feature-icon">✓</div>
+    <div class="feature-text">Aż 60 dni na bezpłatny zwrot</div>
+  </div>
+
+
+
+  <div class="benefits-section">
+    <h2>Benefity lil-a SOLID Ez</h2>
+
+    <div class="benefits-row">
+      <div class="benefit-item">
+        <div class="benefit-icon">
+          <img src="img/delivery-icon.png" alt="Dostawa" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZD0iTTMyIDJDMzIgMiAxMiAxMiAxMiAzMkMxMiA1MiAzMiA2MiAzMiA2MkMzMiA2MiA1MiA1MiA1MiAzMkM1MiAxMiAzMiAyIDMyIDJaIiBmaWxsPSJub25lIiBzdHJva2U9IiM2NUQxQ0QiIHN0cm9rZS13aWR0aD0iNCIvPjxwYXRoIGQ9Ik0zMiAxMlYzMkw0MiA0MiIgc3Ryb2tlPSIjNjVEMUNEIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg=='">
+        </div>
+        <div class="benefit-text">
+          <div class="benefit-title">Darmowa dostawa</div>
+          <div class="benefit-description">Darmowa dostawa każdego zamówionego IQOS-a.</div>
+        </div>
+      </div>
+
+      <div class="benefit-item">
+        <div class="benefit-icon">
+          <img src="img/return-icon.png" alt="Zwrot" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzY1RDFDRCIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHBhdGggZD0iTTIwIDMyTDI4IDQwTDQ0IDI0IiBzdHJva2U9IiM2NUQxQ0QiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+'">
+        </div>
+        <div class="benefit-text">
+          <div class="benefit-title">60 dni na bezpłatny zwrot</div>
+          <div class="benefit-description">Sprawdź IQOS-a, masz na to aż 60 dni.</div>
+        </div>
+      </div>
+
+      <div class="benefit-item">
+        <div class="benefit-icon">
+          <img src="img/payment-icon.png" alt="Płatność" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3QgeD0iMTAiIHk9IjE2IiB3aWR0aD0iNDQiIGhlaWdodD0iMzIiIHJ4PSI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NUQxQ0QiIHN0cm9rZS13aWR0aD0iNCIvPjxwYXRoIGQ9Ik0yNCAzMkg0NE0yNCA0MkgzOCIgc3Ryb2tlPSIjNjVEMUNEIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg=='">
+        </div>
+        <div class="benefit-text">
+          <div class="benefit-title">Kup teraz. Zapłać za 30 dni z Klarną</div>
+          <div class="benefit-description">Skorzystaj z płatności odroczonych.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="product-components">
+    <h2>JAK UŻYWAĆ</h2>
+    <div class="components-container">
+      <div class="component-item">
+        <div class="component-number">1</div>
+        <img src="img/terea-mentolowy.png" alt="Wkład tytoniowy Fiit" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MCAyMDAiPjxyZWN0IHg9IjE0IiB5PSIxMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjE4MCIgcng9IjYiIGZpbGw9IndoaXRlIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz48cmVjdCB4PSIxOCIgeT0iOTAiIHdpZHRoPSI0IiBoZWlnaHQ9IjIwIiBmaWxsPSIjNjVEMUNEIi8+PC9zdmc+Pg=='" width="60">
+        <div class="component-title">Wkład tytoniowy Fiit</div>
+        <div class="component-description">Fiit to wkłady tytoniowe, które zostały zaprojektowane do podgrzewania z wykorzystaniem urządzeń lil SOLID. Nie stanowią one części zestawu.</div>
+      </div>
+      <div class="component-item">
+        <div class="component-number">2</div>
+        <img src="img/lil-solid-ez-device.png" alt="Urządzenie lil SOLID Ez" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MCAyNDAiPjxyZWN0IHg9IjIwIiB5PSIxMCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjIyMCIgcng9IjIwIiBmaWxsPSIjZjVmNWY1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz48cmVjdCB4PSIyMCIgeT0iMTAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcng9IjEwIiBmaWxsPSIjY2NjY2NjIi8+PHRleHQgeD0iNDAiIHk9IjE0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMzQzMDNEIj5saWw8L3RleHQ+PC9zdmc+'" width="120">
+        <div class="component-title">Urządzenie lil SOLID Ez</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="separator" style="height: 1px; background-color: #ddd; margin: 40px 0;"></div>
+
+  <h2 style="margin-bottom: 20px;">Co zawiera pudełko</h2>
+
+  <div style="margin-bottom: 40px;">
+    <ul style="list-style-type: none; padding-left: 0;">
+      <li style="margin-bottom: 10px; display: flex; align-items: center;">
+        <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #65D1CD; margin-right: 12px;"></span>
+        Urządzenie lil SOLID Ez
+      </li>
+      <li style="margin-bottom: 10px; display: flex; align-items: center;">
+        <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #65D1CD; margin-right: 12px;"></span>
+        Instrukcja obsługi
+      </li>
+      <li style="margin-bottom: 10px; display: flex; align-items: center;">
+        <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #65D1CD; margin-right: 12px;"></span>
+        Przyrząd do czyszczenia
+      </li>
+      <li style="display: flex; align-items: center;">
+        <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #65D1CD; margin-right: 12px;"></span>
+        Kabel USB-C
+      </li>
+    </ul>
+  </div>
+
+  <div class="disclaimer">
+    <p>Ta strona jest dedykowana wyłącznie dla dorosłych palaczy i jest sklepem internetowym rekwizytu tytoniowego podgrzewającego tytoń. Ten produkt nie jest wolny od ryzyka i dostarcza nikotynę, która jest uzależniająca. Wyłącznie do użytku przez dorosłych.</p>
+  </div>
+
+  <!-- Фиксированная нижняя панель -->
+  <div class="fixed-bottom-bar">
+    <div class="product-info">
+      <div class="product-name">lil SOLID Ez</div>
+      <div class="product-price">49,00 zł</div>
+    </div>
+    <div class="add-to-cart">Dodaj do koszyka</div>
+  </div>
+
+  <!-- Боковая кнопка чата -->
+  <div class="chat-button">Rozpocznij czat</div>
+</div>
+
+<!-- Модальное окно подтверждения добавления в корзину -->
+<div id="add-to-cart-modal">
+  <div class="modal-content">
+    <div id="close-modal-button">✕</div>
+    <h2 style="margin-top: 0; font-size: 24px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+      <span style="display: inline-block; width: 30px; height: 30px; border-radius: 50%; background-color: #65D1CD; color: white; text-align: center; line-height: 30px; margin-right: 10px;">✓</span>
+      Produkt dodany do koszyka
+    </h2>
+
+    <div id="modal-product-details" style="display: flex; margin: 20px 0;">
+      <div style="width: 100px; margin-right: 15px;">
+        <img id="modal-product-image" src="" alt="" style="max-width: 100%; max-height: 100px; object-fit: contain;">
+      </div>
+      <div>
+        <div id="modal-product-name" style="font-weight: bold; font-size: 20px; margin-bottom: 5px;"></div>
+        <div id="modal-product-color" style="color: #666; margin-bottom: 8px;"></div>
+        <div id="modal-product-quantity" style="font-size: 16px;">szt.: 1</div>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: center; margin-top: 30px;">
+      <a href="Koszyk.html" style="display: block; text-decoration: none; background-color: #34303D; color: white; padding: 15px 40px; border-radius: 30px; font-weight: bold; text-align: center; font-size: 16px;">
+        Koszyk
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Главное меню -->
+<div id="main-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2000;">
+  <div style="background-color: white; width: 100%; height: 100%; max-width: 400px; position: relative; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee;">
+      <div style="font-size: 24px; visibility: hidden;">X</div>
+      <div style="font-size: 24px; font-weight: bold;">IQOS</div>
+      <div style="font-size: 24px; cursor: pointer;" id="close-main-menu">✕</div>
+    </div>
+
+    <div style="padding: 0 20px;">
+      <div style="padding: 30px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" id="menu-produkty">
+        <span style="font-size: 28px; font-weight: bold;">Produkty</span>
+        <span style="font-size: 28px;">›</span>
+      </div>
+
+      <div id="auth-menu-item" style="padding: 30px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+        <span style="font-size: 28px; font-weight: bold;">Zaloguj się</span>
+        <span style="font-size: 28px;">›</span>
+      </div>
+
+      <div id="account-menu-item" style="padding: 30px 0; border-bottom: 1px solid #eee; display: none; justify-content: space-between; align-items: center; cursor: pointer;">
+        <span style="font-size: 28px; font-weight: bold;">Moje konto</span>
+        <span style="font-size: 28px;">›</span>
+      </div>
+
+      <div id="logout-menu-item" style="padding: 30px 0; border-bottom: 1px solid #eee; display: none; justify-content: space-between; align-items: center; cursor: pointer;">
+        <span style="font-size: 28px; font-weight: bold;">Wyloguj się</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Подменю Produkty -->
+<div id="produkty-submenu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2100;">
+  <div style="background-color: white; width: 100%; height: 100%; max-width: 400px; position: relative; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee;">
+      <div style="font-size: 24px; cursor: pointer;" id="back-to-main-menu">←</div>
+      <div style="font-size: 24px; font-weight: bold;">Produkty</div>
+      <div style="font-size: 24px; cursor: pointer;" id="close-produkty-submenu">✕</div>
+    </div>
+
+    <div style="padding: 0 20px;">
+      <a href="index.html" style="text-decoration: none; color: inherit;">
+        <div style="padding: 30px 0; border-bottom: 1px solid #eee;">
+          <span style="font-size: 28px; font-weight: bold;">Seria IQOS ILUMA za 49 zł</span>
+        </div>
+      </a>
+
+      <a href="lil-solid-ez.html" style="text-decoration: none; color: inherit;">
+        <div style="padding: 30px 0; border-bottom: 1px solid #eee;">
+          <span style="font-size: 28px; font-weight: bold;">lil SOLID Ez za 49 zł</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Функция переключения слайдов
+    function changeSlide(direction) {
+      // Получаем активный набор изображений для текущего цвета
+      const activeColorImages = document.querySelector('.color-images.active');
+
+      // Получаем все слайды внутри активного набора
+      const slides = activeColorImages.querySelectorAll('.product-slide');
+
+      // Находим текущий активный слайд и его индекс
+      const activeSlide = activeColorImages.querySelector('.product-slide.active');
+      const currentIndex = parseInt(activeSlide.dataset.slide);
+
+      // Определяем новый индекс в зависимости от направления
+      let newIndex;
+      if (direction === 'next') {
+        newIndex = (currentIndex + 1) % slides.length;
+      } else {
+        newIndex = (currentIndex - 1 + slides.length) % slides.length;
+      }
+
+      // Убираем класс active у текущего слайда
+      activeSlide.classList.remove('active');
+
+      // Добавляем класс active новому слайду
+      slides[newIndex].classList.add('active');
+
+      // Обновляем активную точку
+      updateActiveDot(newIndex);
+    }
+
+    // Функция обновления активной точки
+    function updateActiveDot(index) {
+      const dots = document.querySelectorAll('.color-dot');
+
+      // Убираем класс active у всех точек
+      dots.forEach(dot => dot.classList.remove('active'));
+
+      // Добавляем класс active нужной точке
+      dots[index].classList.add('active');
+    }
+
+    // Функция переключения цвета
+    function changeColor(color) {
+      // Получаем все наборы изображений
+      const allColorImages = document.querySelectorAll('.color-images');
+
+      // Убираем класс active у всех наборов
+      allColorImages.forEach(set => set.classList.remove('active'));
+
+      // Находим нужный набор по цвету
+      const selectedColorImages = document.querySelector(`.color-images[data-color="${color}"]`);
+
+      // Добавляем класс active выбранному набору
+      if (selectedColorImages) {
+        selectedColorImages.classList.add('active');
+
+        // Сбрасываем на первый слайд в новом наборе
+        const slides = selectedColorImages.querySelectorAll('.product-slide');
+        slides.forEach(slide => slide.classList.remove('active'));
+        slides[0].classList.add('active');
+
+        // Обновляем точки
+        updateActiveDot(0);
+      }
+
+      // Обновляем название цвета
+      updateColorName(color);
+    }
+
+    // Функция обновления названия цвета
+    function updateColorName(color) {
+      // Map color class to display name
+      const colorNameMap = {
+        'green': 'Green',
+        'black': 'Black',
+        'blue': 'Blue',
+        'pinc': 'Pink',
+        'white': 'White'
+      };
+
+      // Обновляем отображаемое название цвета
+      document.querySelector('.color-name').textContent = colorNameMap[color] || color;
+    }
+
+    // Добавляем обработчики для кнопок навигации слайдера
+    document.querySelector('.slider-arrow.next').addEventListener('click', function() {
+      changeSlide('next');
+    });
+
+    document.querySelector('.slider-arrow.prev').addEventListener('click', function() {
+      changeSlide('prev');
+    });
+
+    // Добавляем обработчики для точек
+    document.querySelectorAll('.color-dot').forEach(dot => {
+      dot.addEventListener('click', function() {
+        const slideIndex = parseInt(this.dataset.slide);
+
+        // Получаем активный набор изображений
+        const activeColorImages = document.querySelector('.color-images.active');
+
+        // Получаем все слайды внутри активного набора
+        const slides = activeColorImages.querySelectorAll('.product-slide');
+
+        // Убираем класс active у всех слайдов
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        // Добавляем класс active нужному слайду
+        slides[slideIndex].classList.add('active');
+
+        // Обновляем активную точку
+        updateActiveDot(slideIndex);
+      });
+    });
+
+    // Добавляем обработчики для кнопок выбора цвета
+    document.querySelectorAll('.color-option').forEach(option => {
+      option.addEventListener('click', function() {
+        // Убираем класс active у всех кнопок цвета
+        document.querySelectorAll('.color-option').forEach(el => {
+          el.classList.remove('active');
+        });
+
+        // Добавляем класс active нажатой кнопке
+        this.classList.add('active');
+
+        // Получаем выбранный цвет
+        const selectedColor = this.getAttribute('data-color');
+
+        // Меняем набор изображений в соответствии с выбранным цветом
+        changeColor(selectedColor);
+      });
+    });
+
+    // Функция добавления товара в корзину
+    function addToCart() {
+      // Получаем данные о товаре
+      const productName = document.querySelector('.product-title').textContent;
+      const colorName = document.querySelector('.color-name').textContent;
+
+      // Получаем выбранный цвет
+      const selectedColorOption = document.querySelector('.color-option.active');
+      const colorCode = selectedColorOption ? selectedColorOption.getAttribute('data-color') : 'white';
+
+      // Получаем цену товара
+      const priceText = document.querySelector('.product-price').textContent;
+      const price = parseFloat(priceText.replace(',', '.').replace(/[^\d.]/g, ''));
+
+      // Получаем изображение товара
+      const activeColorImages = document.querySelector('.color-images.active');
+      const activeSlide = activeColorImages.querySelector('.product-slide.active');
+      const imageUrl = activeSlide.getAttribute('src');
+
+      // Создаем объект товара
+      const product = {
+        id: 'lil-solid-ez',
+        name: productName,
+        color: colorCode,
+        colorName: colorName,
+        price: price,
+        image: imageUrl,
+        quantity: 1,
+        registration: false
+      };
+
+      // Получаем текущую корзину из localStorage
+      const cartData = localStorage.getItem('iqosCart');
+      const cart = cartData ? JSON.parse(cartData) : [];
+
+      // Проверяем, существует ли товар уже в корзине
+      const existingProductIndex = cart.findIndex(item =>
+        item.id === product.id && item.color === product.color
+      );
+
+      if (existingProductIndex !== -1) {
+        // Если товар существует, увеличиваем количество
+        cart[existingProductIndex].quantity += 1;
+      } else {
+        // Если товар не существует, добавляем его
+        cart.push(product);
+      }
+
+      // Сохраняем обновленную корзину в localStorage
+      localStorage.setItem('iqosCart', JSON.stringify(cart));
+
+      // Обновляем значок корзины
+      updateCartBadge();
+
+      // Заполняем данными о добавленном товаре модальное окно
+      document.getElementById('modal-product-image').src = product.image;
+      document.getElementById('modal-product-name').textContent = product.name;
+      document.getElementById('modal-product-color').textContent = product.colorName;
+
+      // Показываем модальное окно
+      document.getElementById('add-to-cart-modal').style.display = 'flex';
+    }
+
+    // Обновление значка корзины
+    function updateCartBadge() {
+      const cartData = localStorage.getItem('iqosCart');
+      if (cartData) {
+        const cart = JSON.parse(cartData);
+        const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+        const cartBadge = document.querySelector('.icon-badge');
+        if (cartBadge) {
+          if (itemCount > 0) {
+            cartBadge.textContent = itemCount;
+            cartBadge.style.display = 'flex';
+          } else {
+            cartBadge.style.display = 'none';
+          }
+        }
+      }
+    }
+
+    // Инициализация значка корзины при загрузке страницы
+    updateCartBadge();
+
+    // Добавляем обработчики для кнопок "Добавить в корзину"
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+      button.addEventListener('click', addToCart);
+    });
+
+    // Закрытие модального окна
+    document.getElementById('close-modal-button').addEventListener('click', function() {
+      document.getElementById('add-to-cart-modal').style.display = 'none';
+    });
+
+    // Закрытие модального окна при клике вне его содержимого
+    document.getElementById('add-to-cart-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.style.display = 'none';
+      }
+    });
+
+    // Добавление обработчика для кнопки обратно в список
+    document.querySelector('.back-button').addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = 'index.html';
+    });
+
+    // Кнопка чата
+    document.querySelector('.chat-button').addEventListener('click', function() {
+      alert('Funkcjonalność czatu będzie dostępna wkrótce!');
+    });
+
+    // Обработка воспроизведения видео
+    document.querySelector('.play-button').addEventListener('click', function() {
+      alert('Funkcjonalność odtwarzania wideo będzie dostępna wkrótce!');
+    });
+
+    // Обработчики для главного меню
+    const menuIcon = document.querySelector('.menu-icon');
+    const mainMenu = document.getElementById('main-menu');
+    const closeMainMenu = document.getElementById('close-main-menu');
+    const menuProdukty = document.getElementById('menu-produkty');
+    const produktySubmenu = document.getElementById('produkty-submenu');
+    const closeProduktySubmenu = document.getElementById('close-produkty-submenu');
+    const backToMainMenu = document.getElementById('back-to-main-menu');
+
+    // Открытие главного меню
+    menuIcon.addEventListener('click', function() {
+      mainMenu.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    });
+
+    // Закрытие главного меню
+    closeMainMenu.addEventListener('click', function() {
+      mainMenu.style.display = 'none';
+      document.body.style.overflow = '';
+    });
+
+    // Открытие подменю Produkty
+    menuProdukty.addEventListener('click', function() {
+      mainMenu.style.display = 'none';
+      produktySubmenu.style.display = 'block';
+    });
+
+    // Закрытие подменю Produkty
+    closeProduktySubmenu.addEventListener('click', function() {
+      produktySubmenu.style.display = 'none';
+      document.body.style.overflow = '';
+    });
+
+    // Возврат к главному меню
+    backToMainMenu.addEventListener('click', function() {
+      produktySubmenu.style.display = 'none';
+      mainMenu.style.display = 'block';
+    });
+
+    // Закрытие меню при клике вне
+    window.addEventListener('click', function(event) {
+      if (event.target === mainMenu) {
+        mainMenu.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+      if (event.target === produktySubmenu) {
+        produktySubmenu.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Обработка авторизации
+    const storedUser = localStorage.getItem('iqosUser');
+    const authMenuItem = document.getElementById('auth-menu-item');
+    const accountMenuItem = document.getElementById('account-menu-item');
+    const logoutMenuItem = document.getElementById('logout-menu-item');
+
+    if (storedUser && JSON.parse(storedUser).isLoggedIn) {
+      authMenuItem.style.display = 'none';
+      accountMenuItem.style.display = 'flex';
+      logoutMenuItem.style.display = 'flex';
+    } else {
+      authMenuItem.style.display = 'flex';
+      accountMenuItem.style.display = 'none';
+      logoutMenuItem.style.display = 'none';
+    }
+
+    // Обработчики для пунктов меню авторизации
+    authMenuItem.addEventListener('click', function() {
+      window.location.href = 'login.html';
+    });
+
+    accountMenuItem.addEventListener('click', function() {
+      window.location.href = 'account.html';
+    });
+
+    logoutMenuItem.addEventListener('click', function() {
+      const userData = JSON.parse(localStorage.getItem('iqosUser'));
+      userData.isLoggedIn = false;
+      localStorage.setItem('iqosUser', JSON.stringify(userData));
+      window.location.reload();
+    });
+
+    // Обработчики для иконок в шапке
+    document.getElementById('account-icon').addEventListener('click', function() {
+      if (storedUser && JSON.parse(storedUser).isLoggedIn) {
+        window.location.href = 'account.html';
+      } else {
+        window.location.href = 'login.html';
+      }
+    });
+
+    document.getElementById('cart-icon').addEventListener('click', function() {
+      window.location.href = 'Koszyk.html';
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IQOS ILUMA PRIME | Podgrzewacz tytoniu</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'IQOS', Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      color: #34303D;
+    }
+
+    @font-face {
+      font-family: 'IQOS';
+      src: url('IQOS-Bold.woff2') format('woff2'), url('IQOS-Bold.woff') format('woff');
+      font-weight: bold;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'IQOS';
+      src: url('IQOS-Regular.woff2') format('woff2'), url('IQOS-Regular.woff') format('woff');
+      font-weight: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'IQOS';
+      src: url('IQOS-Light.woff2') format('woff2'), url('IQOS-Light.woff') format('woff');
+      font-weight: 300;
+      font-display: swap;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background-color: #fff;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .menu-icon {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .icons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .icon {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .back-button {
+      display: flex;
+      align-items: center;
+      padding: 16px 24px;
+      font-size: 18px;
+      cursor: pointer;
+      color: #34303D;
+      text-decoration: none;
+    }
+
+    .back-button svg {
+      margin-right: 10px;
+    }
+
+    .product-container {
+      padding: 0 20px;
+    }
+
+    /* Styles for image slider */
+    .product-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      padding: 40px 0;
+    }
+
+    #product-images-container {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .color-images {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .color-images.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .product-slide {
+      position: absolute;
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .product-slide.active {
+      opacity: 1;
+    }
+
+    /* Navigation arrows for slider */
+    .slider-nav {
+      width: 100%;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 2;
+    }
+
+    .slider-arrow {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 20px;
+      color: #34303D;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+    }
+
+    .slider-arrow:hover {
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .fullscreen-icon {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .color-indicator {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .color-dots {
+      display: flex;
+      gap: 10px;
+    }
+
+    .color-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #ccc;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .color-dot.active {
+      background-color: #34303D;
+    }
+
+    .color-options {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .color-option {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 1px solid #ddd;
+    }
+
+    .color-option.active {
+      border: 2px solid #34303D;
+    }
+
+    .product-title {
+      font-size: 32px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .product-rating {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .stars {
+      color: #C29A69;
+      margin-right: 10px;
+    }
+
+    .rating-count {
+      color: #999;
+    }
+
+    .color-name {
+      font-size: 20px;
+      margin: 20px 0;
+    }
+
+    .product-price {
+      font-size: 30px;
+      font-weight: bold;
+      margin: 30px 0;
+    }
+
+    .add-to-cart {
+      background-color: #34303D;
+      color: white;
+      padding: 15px;
+      border-radius: 30px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 20px 0 40px;
+    }
+
+    .product-description {
+      margin: 40px 0;
+      line-height: 1.6;
+    }
+
+    .features {
+      margin: 30px 0;
+    }
+
+    .feature {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background-color: #65D1CD;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 20px;
+      flex-shrink: 0;
+    }
+
+    .feature-text {
+      flex-grow: 1;
+    }
+
+    .feature-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .separator {
+      height: 1px;
+      background-color: #ddd;
+      margin: 40px 0;
+    }
+
+    .video-placeholder {
+      width: 100%;
+      height: 200px;
+      background-color: #65D1CD;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 30px 0;
+      border-radius: 5px;
+      position: relative;
+    }
+
+    .video-placeholder::after {
+      content: "▶";
+      color: white;
+      font-size: 40px;
+      position: absolute;
+    }
+
+    .product-component-diagram {
+      margin: 40px 0;
+      background-color: #34303D;
+      padding: 30px;
+      border-radius: 5px;
+    }
+
+    .diagram-content {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
+
+    .diagram-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+    }
+
+    .diagram-number {
+      width: 40px;
+      height: 40px;
+      background-color: #65D1CD;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .diagram-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .warning-text {
+      margin: 30px 0;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .related-section {
+      margin: 40px 0;
+    }
+
+    .related-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    /* Color options */
+    .gold { background-color: #D4AF37; }
+    .green { background-color: #2E8B57; }
+    .purple { background-color: #800080; }
+    .black { background-color: #000000; }
+  </style>
+</head>
+<body>
+<div class="header">
+  <div class="menu-icon">☰</div>
+  <div class="logo">IQOS</div>
+  <div class="icons">
+    <div class="icon">👤</div>
+    <div class="icon">🛒</div>
+  </div>
+</div>
+
+<a href="index.html" class="back-button">
+  <svg width="24" height="24" viewBox="0 0 24 24">
+    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="#34303D"/>
+  </svg>
+  Wróć do listy produktów
+</a>
+
+<div class="product-container">
+  <div class="product-image">
+    <!-- Container for image slider -->
+    <div id="product-images-container">
+      <!-- Gold color -->
+      <div class="color-images" data-color="gold">
+        <img src="img/iluma prime gold1.png" alt="IQOS ILUMA PRIME w kolorze Gold" class="product-slide active" data-slide="0">
+        <img src="img/iluma prime gold2.png" alt="IQOS ILUMA PRIME w kolorze Gold" class="product-slide" data-slide="1">
+        <img src="img/iluma prime gold3.png" alt="IQOS ILUMA PRIME w kolorze Gold" class="product-slide" data-slide="2">
+        <img src="img/iluma prime gold4.png" alt="IQOS ILUMA PRIME w kolorze Gold" class="product-slide" data-slide="3">
+      </div>
+      <!-- Green color -->
+      <div class="color-images" data-color="green">
+        <img src="img/iluma prime green1.png" alt="IQOS ILUMA PRIME w kolorze Moss Green" class="product-slide active" data-slide="0">
+        <img src="img/iluma prime green2.png" alt="IQOS ILUMA PRIME w kolorze Moss Green" class="product-slide" data-slide="1">
+        <img src="img/iluma prime green3.png" alt="IQOS ILUMA PRIME w kolorze Moss Green" class="product-slide" data-slide="2">
+        <img src="img/iluma prime green4.png" alt="IQOS ILUMA PRIME w kolorze Moss Green" class="product-slide" data-slide="3">
+      </div>
+      <!-- Purple color -->
+      <div class="color-images" data-color="purple">
+        <img src="img/iluma prime purple1.png" alt="IQOS ILUMA PRIME w kolorze Purple" class="product-slide active" data-slide="0">
+        <img src="img/iluma prime purple2.png" alt="IQOS ILUMA PRIME w kolorze Purple" class="product-slide" data-slide="1">
+        <img src="img/iluma prime purple3.png" alt="IQOS ILUMA PRIME w kolorze Purple" class="product-slide" data-slide="2">
+        <img src="img/iluma prime purple4.png" alt="IQOS ILUMA PRIME w kolorze Purple" class="product-slide" data-slide="3">
+      </div>
+      <!-- Black color (initially active) -->
+      <div class="color-images active" data-color="black">
+        <img src="img/iluma prime black1.png" alt="IQOS ILUMA PRIME w kolorze Black" class="product-slide active" data-slide="0">
+        <img src="img/iluma prime black2.png" alt="IQOS ILUMA PRIME w kolorze Black" class="product-slide" data-slide="1">
+        <img src="img/iluma prime black3.png" alt="IQOS ILUMA PRIME w kolorze Black" class="product-slide" data-slide="2">
+        <img src="img/iluma prime black4.png" alt="IQOS ILUMA PRIME w kolorze Black" class="product-slide" data-slide="3">
+      </div>
+    </div>
+
+    <!-- Navigation arrows for slider -->
+    <div class="slider-nav">
+      <div class="slider-arrow prev">❮</div>
+      <div class="slider-arrow next">❯</div>
+    </div>
+
+    <div class="fullscreen-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24">
+        <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" fill="#34303D"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="color-indicator">
+    <div class="color-dots">
+      <div class="color-dot active" data-slide="0"></div>
+      <div class="color-dot" data-slide="1"></div>
+      <div class="color-dot" data-slide="2"></div>
+      <div class="color-dot" data-slide="3"></div>
+    </div>
+  </div>
+
+  <h1 class="product-title">IQOS ILUMA PRIME</h1>
+
+  <div class="product-rating">
+    <div class="stars">★★★★★</div>
+    <div class="rating-count">4.8 (356)</div>
+  </div>
+
+  <h2 class="color-name">Black</h2>
+
+  <div class="color-options">
+    <div class="color-option gold" data-color="gold"></div>
+    <div class="color-option green" data-color="green"></div>
+    <div class="color-option purple" data-color="purple"></div>
+    <div class="color-option black active" data-color="black"></div>
+  </div>
+
+  <div class="product-price">49,00 zł</div>
+
+  <div class="add-to-cart">Dodaj do koszyka</div>
+
+  <div class="product-description">
+    <p>IQOS ILUMA PRIME to premium podgrzewacz tytoniu, który łączy w sobie elegancki design i zaawansowaną technologię. Dostarcza smak prawdziwego tytoniu bez popiołu, bez dymu i z mniejszą ilością nieprzyjemnego zapachu.</p>
+    <p>Urządzenie IQOS ILUMA PRIME zostało zaprojektowane do użytku wyłącznie z wkładami tytoniowymi TEREA i DELIA.</p>
+  </div>
+
+  <h3>Co wyróżnia IQOS-a ILUMA PRIME?</h3>
+
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">✓</div>
+      <div class="feature-text">
+        <div class="feature-title">Najwyższa jakość wykonania i elegancki design</div>
+        <div class="feature-description">idealny dla miłośników designu i innowacji</div>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">✓</div>
+      <div class="feature-text">
+        <div class="feature-title">Podgrzewa 25 wkładów tytoniowych jeden po drugim</div>
+        <div class="feature-description">podczas jednego naładowania</div>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">✓</div>
+      <div class="feature-text">
+        <div class="feature-title">Technologia indukcyjna SMARTCORE INDUCTION SYSTEM™</div>
+        <div class="feature-description">Nigdy więcej złamanego ostrza i czyszczenia z pozostałości tytoniu</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="video-placeholder"></div>
+
+  <p>Wyższy poziom satysfakcji z podgrzewania tytoniu w porównaniu z poprzednimi wersjami urządzeń IQOS. Łatwiejszy sposób zaciągania i więcej areozolu.</p>
+
+  <div class="separator"></div>
+
+  <div class="product-component-diagram">
+    <div class="diagram-title">JAK UŻYWAĆ</div>
+    <div class="diagram-content">
+      <div class="diagram-item">
+        <div class="diagram-number">1</div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDEwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTUwIDEwQzUwIDYuMTM0MDEgNTMuMTM0IDMgNTcgM0M2MC44NjYgMyA2NCA2LjEzNDAxIDY0IDEwVjIwQzY0IDIzLjg2NiA2MC44NjYgMjcgNTcgMjdDNTMuMTM0IDI3IDUwIDIzLjg2NiA1MCAyMFYxMFoiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0zMCA0MEg3MEMyOS45OTk5IDE0MCAzMCAxNDAgMzAgMTQwSDcwTDMwIDQwWiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+" alt="IQOS ILUMA PRIME urządzenie" width="60" height="120">
+        <p>IQOS ILUMA PRIME</p>
+      </div>
+      <div class="diagram-item">
+        <div class="diagram-number">2</div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNDAgMTIwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xMCAxMEgzMFYxMTBIMTBWMTBaIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMTAgNDBIMzBWNjBIMTBWNDBaIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=" alt="Wkład tytoniowy TEREA" width="30" height="100">
+        <p>Wkłady tytoniowe</p>
+      </div>
+      <div class="diagram-item">
+        <div class="diagram-number">3</div>
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3QgeD0iMTAiIHk9IjEwIiB3aWR0aD0iODAiIGhlaWdodD0iODAiIHJ4PSI1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjI1IiByPSI4IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=" alt="Etui ładujące" width="80" height="80">
+        <p>Etui ładujące</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="warning-text">
+    <p>Produktów IQOS ILUMA i wkładów tytoniowych TEREA nie należy używać z poprzednimi wersjami urządzeń IQOS, ponieważ może to spowodować ich uszkodzenie. Wkładów tytoniowych TEREA nie należy rozkładać na części ani połykać. Ten produkt zawiera ostrą metalową część, która w przypadku połknięcia może spowodować poważne obrażenia. Przechowuj poza zasięgiem dzieci.</p>
+  </div>
+
+  <div class="separator"></div>
+
+  <div class="related-section">
+    <h2 class="related-title">Zakup IQOS-a ILUMA PRIME? Sprawdź, jakie masz możliwości.</h2>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Function to change slides
+    function changeSlide(direction) {
+      // Get active image set for current color
+      const activeColorImages = document.querySelector('.color-images.active');
+
+      // Get all slides inside active set
+      const slides = activeColorImages.querySelectorAll('.product-slide');
+
+      // Find current active slide and its index
+      const activeSlide = activeColorImages.querySelector('.product-slide.active');
+      const currentIndex = parseInt(activeSlide.dataset.slide);
+
+      // Determine new index based on direction
+      let newIndex;
+      if (direction === 'next') {
+        newIndex = (currentIndex + 1) % slides.length;
+      } else {
+        newIndex = (currentIndex - 1 + slides.length) % slides.length;
+      }
+
+      // Remove active class from current slide
+      activeSlide.classList.remove('active');
+
+      // Add active class to new slide
+      slides[newIndex].classList.add('active');
+
+      // Update active dot
+      updateActiveDot(newIndex);
+    }
+
+    // Function to update active dot
+    function updateActiveDot(index) {
+      const dots = document.querySelectorAll('.color-dot');
+
+      // Remove active class from all dots
+      dots.forEach(dot => dot.classList.remove('active'));
+
+      // Add active class to the needed dot
+      dots[index].classList.add('active');
+    }
+
+    // Function to change color
+    function changeColor(color) {
+      // Get all image sets
+      const allColorImages = document.querySelectorAll('.color-images');
+
+      // Remove active class from all sets
+      allColorImages.forEach(set => set.classList.remove('active'));
+
+      // Find needed set by color
+      const selectedColorImages = document.querySelector(`.color-images[data-color="${color}"]`);
+
+      // Add active class to selected set
+      if (selectedColorImages) {
+        selectedColorImages.classList.add('active');
+
+        // Reset to first slide in new set
+        const slides = selectedColorImages.querySelectorAll('.product-slide');
+        slides.forEach(slide => slide.classList.remove('active'));
+        slides[0].classList.add('active');
+
+        // Update dots
+        updateActiveDot(0);
+      }
+
+      // Update color name
+      updateColorName(color);
+    }
+
+    // Function to update color name
+    function updateColorName(color) {
+      // Map color class to display name
+      const colorNameMap = {
+        'gold': 'Gold',
+        'green': 'Moss Green',
+        'purple': 'Royal Purple',
+        'black': 'Black'
+      };
+
+      // Update displayed color name
+      document.querySelector('.color-name').textContent = colorNameMap[color] || color;
+    }
+
+    // Add handlers for slider navigation buttons
+    document.querySelector('.slider-arrow.next').addEventListener('click', function() {
+      changeSlide('next');
+    });
+
+    document.querySelector('.slider-arrow.prev').addEventListener('click', function() {
+      changeSlide('prev');
+    });
+
+    // Add handlers for dots
+    document.querySelectorAll('.color-dot').forEach(dot => {
+      dot.addEventListener('click', function() {
+        const slideIndex = parseInt(this.dataset.slide);
+
+        // Get active image set
+        const activeColorImages = document.querySelector('.color-images.active');
+
+        // Get all slides inside active set
+        const slides = activeColorImages.querySelectorAll('.product-slide');
+
+        // Remove active class from all slides
+        slides.forEach(slide => slide.classList.remove('active'));
+
+        // Add active class to needed slide
+        slides[slideIndex].classList.add('active');
+
+        // Update active dot
+        updateActiveDot(slideIndex);
+      });
+    });
+
+    // Add handlers for color selection buttons
+    document.querySelectorAll('.color-option').forEach(option => {
+      option.addEventListener('click', function() {
+        // Remove active class from all color buttons
+        document.querySelectorAll('.color-option').forEach(el => {
+          el.classList.remove('active');
+        });
+
+        // Add active class to clicked button
+        this.classList.add('active');
+
+        // Get selected color
+        const selectedColor = this.dataset.color;
+
+        // Change image set according to selected color
+        changeColor(selectedColor);
+      });
+    });
+
+
+
+    // Add swipe support for mobile devices
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    const productContainer = document.getElementById('product-images-container');
+
+    productContainer.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+
+    productContainer.addEventListener('touchend', function(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, false);
+
+    function handleSwipe() {
+      if (touchEndX < touchStartX) {
+        // Swipe left - next slide
+        changeSlide('next');
+      } else if (touchEndX > touchStartX) {
+        // Swipe right - previous slide
+        changeSlide('prev');
+      }
+    }
+  });
+  // Script to add to IQOS ILUMA PRIME Product Page.html
+
+  // Function to add product to cart
+  // Function to add product to cart
+  function addToCart(product) {
+    // Get current cart from localStorage
+    const cartData = localStorage.getItem('iqosCart');
+    const cart = cartData ? JSON.parse(cartData) : [];
+
+    // Check if the product already exists in the cart
+    const existingProductIndex = cart.findIndex(item =>
+      item.id === product.id && item.color === product.color
+    );
+
+    if (existingProductIndex !== -1) {
+      // If product exists, increment quantity
+      cart[existingProductIndex].quantity += 1;
+    } else {
+      // If product doesn't exist, add it
+      cart.push(product);
+    }
+
+    // Save updated cart to localStorage
+    localStorage.setItem('iqosCart', JSON.stringify(cart));
+
+    // Update cart badge if it exists on this page
+    const cartBadges = document.querySelectorAll('.icon-badge');
+    if (cartBadges.length > 0) {
+      const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+      cartBadges.forEach(badge => {
+        badge.textContent = itemCount;
+        badge.style.display = 'flex';
+      });
+    }
+
+    // Заполняем и показываем модальное окно вместо alert
+    const modal = document.getElementById('add-to-cart-modal');
+    const productImage = document.getElementById('modal-product-image');
+    const productName = document.getElementById('modal-product-name');
+    const productColor = document.getElementById('modal-product-color');
+    const productQuantity = document.getElementById('modal-product-quantity');
+
+    // Заполняем данными о добавленном товаре
+    productImage.src = product.image;
+    productImage.alt = product.name;
+    productName.textContent = product.name;
+    productColor.textContent = product.colorName;
+    productQuantity.textContent = 'szt.: 1';
+
+    // Показываем модальное окно
+    modal.style.display = 'flex';
+
+    // Закрываем модальное окно при клике вне его
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  }
+
+  // Add click handler to the "Add to cart" button
+  document.addEventListener('DOMContentLoaded', function() {
+
+    const addToCartButton = document.querySelector('.add-to-cart');
+
+    if (addToCartButton) {
+      addToCartButton.addEventListener('click', function() {
+        // Get product name
+        const productName = document.querySelector('.product-title').textContent;
+
+        // Get selected color
+        const selectedColorOption = document.querySelector('.color-option.active');
+        const colorCode = selectedColorOption.getAttribute('data-color');
+
+        // Get color name displayed on the page
+        const colorName = document.querySelector('.color-name').textContent;
+
+        // Get product price (remove currency symbol and convert to number)
+        const priceText = document.querySelector('.product-price').textContent;
+        const price = parseFloat(priceText.replace(',', '.').replace(/[^\d.]/g, ''));
+
+        // Get product image (first image of the active color set)
+        const activeColorImages = document.querySelector('.color-images.active');
+        const firstImage = activeColorImages.querySelector('.product-slide.active');
+        const imageUrl = firstImage.getAttribute('src');
+
+        // Create product object
+        const product = {
+          id: 'iluma-prime', // Unique identifier for ILUMA PRIME
+          name: productName,
+          color: colorCode,
+          colorName: colorName,
+          price: price,
+          image: imageUrl,
+          quantity: 1,
+          registration: false // Default value, can be changed if needed
+        };
+
+        // Add to cart
+        addToCart(product);
+        // Обработчик клика для закрытия модального окна
+        document.addEventListener('click', function(event) {
+          const modal = document.getElementById('add-to-cart-modal');
+          if (event.target === modal) {
+            modal.style.display = 'none';
+          }
+        });});
+    }
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    // Получаем ссылки на элементы меню
+    const menuIcon = document.querySelector('.menu-icon');
+    const mainMenu = document.getElementById('main-menu');
+    const closeMainMenu = document.getElementById('close-main-menu');
+    const menuProdukty = document.getElementById('menu-produkty');
+    const produktySubmenu = document.getElementById('produkty-submenu');
+    const closeProduktySubmenu = document.getElementById('close-produkty-submenu');
+    const backToMainMenu = document.getElementById('back-to-main-menu');
+
+    // Открытие основного меню при клике на иконку меню
+    menuIcon.addEventListener('click', function() {
+      mainMenu.style.display = 'block';
+      document.body.style.overflow = 'hidden'; // Запрещаем прокрутку основной страницы
+    });
+
+    // Закрытие основного меню
+    closeMainMenu.addEventListener('click', function() {
+      mainMenu.style.display = 'none';
+      document.body.style.overflow = ''; // Возвращаем прокрутку
+    });
+
+    // Открытие подменю Produkty
+    menuProdukty.addEventListener('click', function() {
+      mainMenu.style.display = 'none';
+      produktySubmenu.style.display = 'block';
+    });
+
+    // Закрытие подменю Produkty
+    closeProduktySubmenu.addEventListener('click', function() {
+      produktySubmenu.style.display = 'none';
+      document.body.style.overflow = ''; // Возвращаем прокрутку
+    });
+
+    // Возврат к основному меню
+    backToMainMenu.addEventListener('click', function() {
+      produktySubmenu.style.display = 'none';
+      mainMenu.style.display = 'block';
+    });
+
+    // Закрытие меню при клике вне его области
+    window.addEventListener('click', function(event) {
+      if (event.target === mainMenu) {
+        mainMenu.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+      if (event.target === produktySubmenu) {
+        produktySubmenu.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    });
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    // Добавляем ссылку на профиль при клике на иконку пользователя
+    const userIcon = document.querySelector('.icon:first-child'); // Выбираем первую иконку (пользователя)
+    if (userIcon) {
+      userIcon.addEventListener('click', function() {
+        // Проверяем, авторизован ли пользователь
+        const storedUser = localStorage.getItem('iqosUser');
+        if (storedUser && JSON.parse(storedUser).isLoggedIn) {
+          // Если авторизован - переходим на страницу профиля
+          window.location.href = 'account.html';
+        } else {
+          // Если не авторизован - переходим на страницу входа
+          window.location.href = 'login.html';
+        }
+      });
+    }
+  });
+  // Этот код нужно вставить в <head> или перед закрывающим тегом </body> на странице index.html
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // 1. Заменяем эмодзи-иконку пользователя на SVG
+    const userIcon = document.querySelector('.icon:first-child');
+    if (userIcon) {
+      // Создаем SVG иконку пользователя
+      const userSvg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="5"></circle>
+        <path d="M20 21a8 8 0 1 0-16 0"></path>
+      </svg>
+    `;
+
+      // Удаляем эмодзи и вставляем SVG
+      userIcon.innerHTML = userSvg;
+
+      // Добавляем обработчик клика (если его еще нет)
+      userIcon.addEventListener('click', function() {
+        const storedUser = localStorage.getItem('iqosUser');
+        if (storedUser && JSON.parse(storedUser).isLoggedIn) {
+          window.location.href = 'account.html';
+        } else {
+          window.location.href = 'login.html';
+        }
+      });
+    }
+
+    // 2. Заменяем эмодзи-иконку корзины на SVG
+    const cartIcon = document.querySelector('.icon:nth-child(2)');
+    if (cartIcon) {
+      // Проверяем, есть ли уже значок badge
+      let badge = cartIcon.querySelector('.icon-badge');
+
+      // Создаем SVG иконку корзины
+      const cartSvg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2h12l3 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9l3-7z"></path>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+    `;
+
+      // Удаляем эмодзи и вставляем SVG
+      cartIcon.innerHTML = cartSvg;
+
+      // Если значок badge уже был, добавляем его заново
+      if (badge) {
+        cartIcon.appendChild(badge);
+      } else {
+        // Если значка не было, создаем его
+        badge = document.createElement('span');
+        badge.className = 'icon-badge';
+        badge.style.position = 'absolute';
+        badge.style.top = '-8px';
+        badge.style.right = '-8px';
+        badge.style.backgroundColor = '#65D1CD';
+        badge.style.color = 'white';
+        badge.style.borderRadius = '50%';
+        badge.style.width = '20px';
+        badge.style.height = '20px';
+        badge.style.display = 'none'; // Изначально скрыт
+        badge.style.justifyContent = 'center';
+        badge.style.alignItems = 'center';
+        badge.style.fontSize = '12px';
+        badge.style.fontWeight = 'bold';
+
+        // Добавляем значок в иконку корзины
+        cartIcon.appendChild(badge);
+      }
+
+      // Добавляем обработчик клика (если его еще нет)
+      cartIcon.addEventListener('click', function() {
+        window.location.href = 'Koszyk.html';
+      });
+    }
+
+    // 3. Обновляем значок корзины при загрузке страницы
+    function updateCartBadge() {
+      const cartData = localStorage.getItem('iqosCart');
+      if (cartData) {
+        const cart = JSON.parse(cartData);
+        const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+        const cartBadges = document.querySelectorAll('.icon-badge');
+        cartBadges.forEach(badge => {
+          if (itemCount > 0) {
+            badge.textContent = itemCount;
+            badge.style.display = 'flex';
+          } else {
+            badge.style.display = 'none';
+          }
+        });
+      }
+    }
+
+    // 4. Обеспечиваем обновление значка корзины при добавлении товара
+    // Ищем функцию addProductToCart и модифицируем её для вызова updateCartBadge
+    const scripts = document.querySelectorAll('script');
+    let scriptModified = false;
+
+    scripts.forEach(script => {
+      if (script.textContent.includes('function addProductToCart') && !scriptModified) {
+        if (!script.textContent.includes('updateCartBadge();')) {
+          const modifiedScript = script.textContent.replace(
+            'localStorage.setItem(\'iqosCart\', JSON.stringify(cart));',
+            'localStorage.setItem(\'iqosCart\', JSON.stringify(cart));\n\n      // Обновляем значок корзины\n      updateCartBadge();'
+          );
+
+          // Создаем и выполняем модифицированный скрипт
+          const newScript = document.createElement('script');
+          newScript.textContent = modifiedScript;
+          document.body.appendChild(newScript);
+          scriptModified = true;
+        }
+      }
+    });
+
+    // Делаем функцию updateCartBadge глобально доступной
+    window.updateCartBadge = updateCartBadge;
+
+    // Обновляем значок корзины при загрузке страницы
+    updateCartBadge();
+  });
+</script>
+<!-- Модальное окно подтверждения добавления в корзину -->
+<div id="add-to-cart-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+  <div style="background-color: white; width: 90%; max-width: 500px; border-radius: 8px; padding: 20px; position: relative;">
+    <h2 style="margin-top: 0; font-size: 24px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+      <span style="display: inline-block; width: 30px; height: 30px; border-radius: 50%; background-color: #65D1CD; color: white; text-align: center; line-height: 30px; margin-right: 10px;">✓</span>
+      Produkt dodany do koszyka
+    </h2>
+
+    <div id="modal-product-details" style="display: flex; margin: 20px 0;">
+      <div style="width: 100px; margin-right: 15px;">
+        <img id="modal-product-image" src="" alt="" style="max-width: 100%; max-height: 100px; object-fit: contain;">
+      </div>
+      <div>
+        <div id="modal-product-name" style="font-weight: bold; font-size: 20px; margin-bottom: 5px;"></div>
+        <div id="modal-product-color" style="color: #666; margin-bottom: 8px;"></div>
+        <div id="modal-product-quantity" style="font-size: 16px;">szt.: 1</div>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: center; margin-top: 30px;">
+      <a href="Koszyk.html" style="display: block; text-decoration: none; background-color: #34303D; color: white; padding: 15px 40px; border-radius: 30px; font-weight: bold; text-align: center; font-size: 16px;">
+        Koszyk
+      </a>
+    </div>
+  </div>
+</div>
+<!-- Здесь может быть разный код на разных страницах -->
+
+<!-- Основное меню -->
+<div id="main-menu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2000;">
+  <div style="background-color: white; width: 100%; height: 100%; max-width: 400px; position: relative; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee;">
+      <div style="font-size: 24px; visibility: hidden;">X</div>
+      <div style="font-size: 24px; font-weight: bold;">IQOS</div>
+      <div style="font-size: 24px; cursor: pointer;" id="close-main-menu">✕</div>
+    </div>
+
+    <div style="padding: 0 20px;">
+      <div style="padding: 30px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" id="menu-produkty">
+        <span style="font-size: 28px; font-weight: bold;">Produkty</span>
+        <span style="font-size: 28px;">›</span>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<!-- Подменю Produkty -->
+<div id="produkty-submenu" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 2100;">
+  <div style="background-color: white; width: 100%; height: 100%; max-width: 400px; position: relative; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee;">
+      <div style="font-size: 24px; cursor: pointer;" id="back-to-main-menu">←</div>
+      <div style="font-size: 24px; font-weight: bold;">Produkty</div>
+      <div style="font-size: 24px; cursor: pointer;" id="close-produkty-submenu">✕</div>
+    </div>
+
+    <div style="padding: 0 20px;">
+      <a href="index.html" style="text-decoration: none; color: inherit;">
+        <div style="padding: 30px 0; border-bottom: 1px solid #eee;">
+          <span style="font-size: 28px; font-weight: bold;">Seria IQOS ILUMA za 49 zł</span>
+        </div>
+      </a>
+
+      <div style="padding: 30px 0; border-bottom: 1px solid #eee;">
+        <span style="font-size: 28px; font-weight: bold;">lil SOLID Ez za 49 zł</span>
+      </div>
+
+
+
+      <div style="padding: 30px 0; border-bottom: 1px solid #eee;">
+        <div style="font-size: 28px; font-weight: bold; margin-bottom: 10px;">Oferty specjalne</div>
+        <div style="font-size: 18px; color: #666;">Zaloguj się i sprawdź</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
